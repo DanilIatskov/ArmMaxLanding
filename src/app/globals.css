@@ -1,0 +1,107 @@
+@import 'tailwindcss';
+
+/*
+  Палитра выведена из двух источников:
+  — логотип АРММАКС (гранёная «М»): #242d66, #2e3192, #4752a2, #1b75bc, #00adef
+  — референс ru-54.com (СПК): тёмный #060d28, синий #017efa, светлые #ebebeb / #f2f2f2
+  Строгий корпоративный тон: тёмно-синяя основа, много воздуха, один акцент.
+*/
+@theme {
+  --color-ink-950: #070b1f;
+  --color-ink-900: #0b1028;
+  --color-ink-800: #141b3d;
+  --color-ink-700: #1e2754;
+
+  --color-brand-900: #1a2255;
+  --color-brand-800: #242d66;
+  --color-brand-700: #2e3192;
+  --color-brand-600: #4752a2;
+  --color-brand-500: #1b75bc;
+  --color-brand-400: #2a8fd8;
+
+  --color-accent-500: #00adef;
+  --color-accent-400: #35c2f5;
+
+  --color-surface: #ffffff;
+  --color-surface-muted: #f4f6fa;
+  --color-surface-sunken: #ebeef4;
+  --color-line: #e0e5ee;
+  --color-line-strong: #c8d0de;
+
+  --color-body: #3c4763;
+  --color-body-soft: #6a7691;
+
+  --font-sans: var(--font-roboto), system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --text-display: 3.5rem;
+  --text-display--line-height: 1.06;
+  --text-display--letter-spacing: -0.02em;
+
+  --spacing-section: 6.5rem;
+
+  --radius-card: 2px;
+
+  --shadow-card: 0 1px 2px rgb(11 16 40 / 0.04), 0 8px 24px -12px rgb(11 16 40 / 0.14);
+  --shadow-card-hover: 0 2px 4px rgb(11 16 40 / 0.06), 0 18px 40px -16px rgb(11 16 40 / 0.22);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* Шапка липкая — якорные ссылки не должны уезжать под неё. */
+    scroll-padding-top: 6rem;
+  }
+
+  body {
+    background-color: var(--color-surface);
+    color: var(--color-body);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1, h2, h3, h4 {
+    color: var(--color-ink-900);
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent-500);
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background-color: var(--color-brand-700);
+    color: #fff;
+  }
+}
+
+@layer components {
+  /* Тонкая линия-акцент под заголовками разделов — отсылка к гранёной «М» логотипа. */
+  .rule-accent::after {
+    content: '';
+    display: block;
+    width: 3.5rem;
+    height: 3px;
+    margin-top: 1.25rem;
+    background: linear-gradient(90deg, var(--color-brand-700), var(--color-accent-500));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
