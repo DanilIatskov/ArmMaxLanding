@@ -16,6 +16,12 @@ const roboto = Roboto({
   display: 'swap',
 })
 
+/**
+ * Превью-сборка (GitHub Pages) не должна попадать в индекс: дубль сайта
+ * в выдаче конкурирует с боевым доменом и сливает его позиции.
+ */
+const noindex = process.env.NOINDEX === '1'
+
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
@@ -34,7 +40,7 @@ export const metadata: Metadata = {
     title: `${requisites.legalName} — строительство под ключ`,
     description: company.tagline,
   },
-  robots: { index: true, follow: true },
+  robots: noindex ? { index: false, follow: false } : { index: true, follow: true },
   ...(site.yandexVerification ? { verification: { yandex: site.yandexVerification } } : {}),
 }
 

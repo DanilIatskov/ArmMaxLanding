@@ -1,0 +1,63 @@
+# Превью-сборка сайта на GitHub Pages.
+#
+# Pages отдаёт только статику, поэтому это демонстрация вёрстки, а не боевой
+# запуск: форма заявки ничего не отправляет, заголовки безопасности не работают.
+# Боевой хостинг — сервер в РФ с `next start` (заявки с персданными не должны
+# уходить через зарубежный сервис, 152-ФЗ).
+name: Deploy preview to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Параллельные деплои перетирают друг друга — пропускаем промежуточные.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      # Роут-хендлеры в статический экспорт не собираются. В репозитории
+      # /api/lead нужен для боевой сборки, поэтому убираем его только здесь.
+      - name: Remove server-only routes
+        run: rm -rf src/app/api
+
+      - name: Build static export
+        env:
+          STATIC_EXPORT: '1'
+          # Сайт живёт в подпапке /<repo> на github.io.
+          BASE_PATH: /${{ github.event.repository.name }}
+          NOINDEX: '1'
+          NEXT_PUBLIC_STATIC_PREVIEW: '1'
+        run: npx next build
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

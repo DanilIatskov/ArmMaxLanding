@@ -6,6 +6,12 @@ import { Button } from './ui'
 
 type Status = 'idle' | 'sending' | 'ok' | 'error'
 
+/**
+ * Превью на GitHub Pages — статика, принимать заявки там физически некому.
+ * Молча ронять форму в ошибку нельзя: демо смотрит заказчик.
+ */
+const staticPreview = process.env.NEXT_PUBLIC_STATIC_PREVIEW === '1'
+
 const field =
   'w-full rounded-card border border-line bg-surface px-4 py-3.5 text-[15px] text-ink-900 transition-colors placeholder:text-body-soft focus:border-brand-500 focus:outline-none'
 
@@ -20,6 +26,12 @@ export function LeadForm({ tone = 'light' }: { tone?: 'light' | 'dark' }) {
 
     setStatus('sending')
     setError(null)
+
+    if (staticPreview) {
+      form.reset()
+      setStatus('ok')
+      return
+    }
 
     try {
       const res = await fetch('/api/lead', {
@@ -48,7 +60,9 @@ export function LeadForm({ tone = 'light' }: { tone?: 'light' | 'dark' }) {
           Заявка отправлена
         </p>
         <p className={`mt-3 text-[15px] ${tone === 'dark' ? 'text-white/65' : 'text-body'}`}>
-          Перезвоним в рабочее время — пн–пт с 9:00 до 18:00.
+          {staticPreview
+            ? 'Это демонстрационная версия сайта — заявка никуда не отправлена.'
+            : 'Перезвоним в рабочее время — пн–пт с 9:00 до 18:00.'}
         </p>
       </div>
     )

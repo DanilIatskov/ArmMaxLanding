@@ -2,6 +2,9 @@ import type { MetadataRoute } from 'next'
 import { services } from '@/content/services'
 import { site } from '@/content/company'
 
+// Чтение process.env делает роут динамическим — в статическом экспорте это ошибка сборки.
+export const dynamic = 'force-static'
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date()
 
