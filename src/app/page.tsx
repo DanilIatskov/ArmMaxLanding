@@ -1,4 +1,6 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
+import etapyKran from '@/assets/etapy-kran.jpg'
 import { Hero } from '@/components/Hero'
 import { GlanceGrid } from '@/components/GlanceGrid'
 import { SystemTabs } from '@/components/SystemTabs'
@@ -50,14 +52,44 @@ export default function HomePage() {
 
       <SectorsGrid />
 
-      <Section tone="muted">
-        <Reveal>
-          <SectionHeading
-            eyebrow="Как мы работаем"
-            title="От замысла заказчика до перерезания ленточки"
-            lead="На каждом этапе есть результат, который заказчик получает на руки, — а не обещание, что «всё идёт по плану»."
-          />
-        </Reveal>
+      <Section tone="muted" className="overflow-hidden">
+        {/*
+          Кадр занимает правые 60% экрана и живёт только в верхней части блока —
+          от края секции до первой линейки списка. Отрицательные top и bottom
+          гасят вертикальные поля секции и отступ перед списком, поэтому кадр
+          заканчивается ровно на разделителе.
+
+          `right-[calc(50%-50vw)]` выпускает его за контейнер до края окна:
+          50% ширины контейнера минус половина окна как раз даёт нужный вынос
+          при любой ширине. Слева и снизу кадр гасится градиентами в цвет секции.
+
+          object-cover, а не contain: при contain пропорции не сходились
+          и сверху или снизу оставалась пустая полоса, разная на каждой ширине.
+
+          max-width считается от высоты рамки: 446px × (2140/735) ≈ 1298px.
+          Пока рамка не шире этого, cover вписывает кадр по высоте и режет
+          только левый край с пустым небом — он и так уходит под градиент.
+          Без ограничения на широком экране рамка становилась шире пропорций
+          кадра, и срезалось уже небо сверху.
+        */}
+        <div className="relative">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute top-[-120px] right-[calc(50%-50vw)] bottom-[-80px] hidden w-[86vw] max-w-[1298px] lg:block"
+          >
+            <Image src={etapyKran} alt="" fill sizes="86vw" className="object-cover object-right-bottom" />
+            <div className="absolute inset-0 bg-gradient-to-r from-surface-muted from-12% via-surface-muted/50 via-45% to-transparent to-80%" />
+            <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-surface-muted to-transparent" />
+          </div>
+
+          <Reveal className="relative">
+            <SectionHeading
+              eyebrow="Как мы работаем"
+              title="От замысла заказчика до перерезания ленточки"
+              lead="На каждом этапе есть результат, который заказчик получает на руки, — а не обещание, что «всё идёт по плану»."
+            />
+          </Reveal>
+        </div>
 
         {/* Линейка живёт на <li>, нижняя — на самом <ol>. Раньше стояло
             `last:border-b`, но каждый <li> был единственным ребёнком своего

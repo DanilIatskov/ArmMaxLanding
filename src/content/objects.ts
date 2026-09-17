@@ -8,11 +8,19 @@
  * достаточно не найти подтверждения одному объекту, чтобы снять доверие
  * со всего сайта. Выдуманное портфолио здесь опаснее пустого раздела.
  *
+ * Снимки тоже постановочные: их ровно три, и список специально сокращён
+ * до трёх объектов, чтобы в сетке не было карточек-заглушек.
+ *
  * Что нужно от заказчика на каждый объект: название, город, тип, год,
  * объём работ, площадь и фотографии с разрешением на публикацию.
  *
  * Когда придут настоящие — просто заменить массив.
  */
+
+import type { StaticImageData } from 'next/image'
+import administrativnoBytovoyKorpus from '@/assets/objects/administrativno-bytovoy-korpus.jpg'
+import logisticheskiyCentr from '@/assets/objects/logisticheskiy-centr.jpg'
+import proizvodstvennoSkladskoyKompleks from '@/assets/objects/proizvodstvenno-skladskoy-kompleks.jpg'
 
 export type BuildObject = {
   slug: string
@@ -24,8 +32,8 @@ export type BuildObject = {
   /** Объём работ — что делали: «генподряд», «проектирование + строительство». */
   scope: string
   area?: string
-  /** Фото объекта. Пока его нет, карточка показывает гранёную плитку. */
-  image?: string
+  /** Фото объекта. Без него карточка показывает серую заглушку. */
+  image?: StaticImageData
   /** Метка на карте: [широта, долгота]. */
   geo?: [number, number]
 }
@@ -39,6 +47,7 @@ export const objects: BuildObject[] = [
     year: 2024,
     scope: 'Генподряд: от ТУ до ввода в эксплуатацию',
     area: '12 400 м²',
+    image: proizvodstvennoSkladskoyKompleks,
   },
   {
     slug: 'logisticheskiy-centr',
@@ -48,6 +57,7 @@ export const objects: BuildObject[] = [
     year: 2024,
     scope: 'Проектирование и строительство',
     area: '18 600 м²',
+    image: logisticheskiyCentr,
   },
   {
     slug: 'administrativno-bytovoy-korpus',
@@ -57,32 +67,6 @@ export const objects: BuildObject[] = [
     year: 2023,
     scope: 'Общестрой, инженерия, отделка',
     area: '3 800 м²',
-  },
-  {
-    slug: 'kotelnaya-i-seti',
-    title: 'Котельная и наружные инженерные сети',
-    city: 'Новосибирская область',
-    type: 'Инженерная инфраструктура',
-    year: 2023,
-    scope: 'Технические условия, проект, строительство',
-    area: '4,2 км сетей',
-  },
-  {
-    slug: 'rekonstrukciya-proizvodstvennogo-korpusa',
-    title: 'Реконструкция производственного корпуса',
-    city: 'Томск',
-    type: 'Реконструкция',
-    year: 2022,
-    scope: 'Усиление конструкций, замена кровли и сетей',
-    area: '7 100 м²',
-  },
-  {
-    slug: 'blagoustroystvo-promploshchadki',
-    title: 'Благоустройство промышленной площадки',
-    city: 'Новосибирск',
-    type: 'Благоустройство',
-    year: 2022,
-    scope: 'Покрытия, ливневая канализация, освещение',
-    area: '2,8 га',
+    image: administrativnoBytovoyKorpus,
   },
 ]

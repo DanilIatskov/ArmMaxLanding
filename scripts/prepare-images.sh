@@ -22,6 +22,10 @@ PAIRS=(
   "images/этап-3-проектирование.png|src/assets/stages/proektirovanie.jpg"
   "images/этап-4-общестрой.png|src/assets/stages/obshchestroy-i-inzheneriya.jpg"
   "images/этап-5-ввод.png|src/assets/stages/vvod-v-ekspluataciyu.jpg"
+  "images/объект-складской-комплекс.png|src/assets/objects/proizvodstvenno-skladskoy-kompleks.jpg"
+  "images/объект-логистический-центр.png|src/assets/objects/logisticheskiy-centr.jpg"
+  "images/объект-административный-корпус.png|src/assets/objects/administrativno-bytovoy-korpus.jpg"
+  "images/фон-этапы.png|src/assets/etapy-kran.jpg"
 )
 
 for pair in "${PAIRS[@]}"; do
