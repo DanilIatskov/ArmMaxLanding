@@ -35,8 +35,20 @@ const condensed = Roboto_Condensed({
  */
 const noindex = process.env.NOINDEX === '1'
 
+/**
+ * Адрес, относительно которого считаются og:url, og:image и canonical.
+ *
+ * Боевой домен ещё не куплен, а ссылку на превью заказчик пересылает в
+ * мессенджере — и тот идёт за картинкой на несуществующий armmaks-stroy.ru,
+ * так что карточка приходит пустой. Поэтому превью-сборка подставляет свой
+ * адрес: SITE_ORIGIN и BASE_PATH задаёт workflow деплоя, в боевой сборке их
+ * нет и берётся домен из контента.
+ */
+const basePath = process.env.BASE_PATH ?? ''
+const siteUrl = process.env.SITE_ORIGIN ? `${process.env.SITE_ORIGIN}${basePath}` : site.url
+
 export const metadata: Metadata = {
-  metadataBase: new URL(site.url),
+  metadataBase: new URL(siteUrl),
   title: {
     default: `${requisites.legalName} — строительство под ключ в Новосибирске`,
     template: `%s — ${company.name}`,
@@ -62,10 +74,12 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'ru_RU',
     siteName: requisites.legalName,
-    url: site.url,
+    url: siteUrl,
     images: [
       {
-        url: '/og-preview.jpg',
+        // Адрес абсолютный, а не '/og-preview.jpg': на превью сайт лежит
+        // в подпапке /<repo>, и путь от корня увёл бы в пустоту.
+        url: `${siteUrl}/og-preview.jpg`,
         width: 1200,
         height: 630,
         alt: 'ООО «АРММАКС-СТРОЙ»: строительство под ключ — от технических условий до ввода в эксплуатацию. Новосибирск и Сибирский федеральный округ.',
