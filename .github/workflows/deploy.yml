@@ -44,6 +44,10 @@ jobs:
           STATIC_EXPORT: '1'
           # Сайт живёт в подпапке /<repo> на github.io.
           BASE_PATH: /${{ github.event.repository.name }}
+          # Адрес превью: от него считаются og:url и og:image. Без этого они
+          # уходят на боевой домен, который ещё не куплен, и ссылка на превью
+          # разворачивается в мессенджере пустой карточкой.
+          SITE_ORIGIN: https://${{ github.repository_owner }}.github.io
           NOINDEX: '1'
           NEXT_PUBLIC_STATIC_PREVIEW: '1'
         run: npx next build
