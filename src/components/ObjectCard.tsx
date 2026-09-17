@@ -38,7 +38,10 @@ export function ObjectCard({ object }: { object: BuildObject }) {
 
         <p className="mt-4 flex-1 text-[15px] leading-relaxed">{object.scope}</p>
 
-        <dl className="mt-6 flex flex-wrap gap-x-6 gap-y-2 border-t border-line pt-5 text-sm">
+        {/* На инверсии border-line (#dfe4ee) читается почти как белая линия
+            и перетягивает внимание с заголовка — гасим до той же прозрачной
+            белой, что разделяет блоки в футере и тёмной форме. */}
+        <dl className="mt-6 flex flex-wrap gap-x-6 gap-y-2 border-t border-line pt-5 text-sm transition-colors duration-300 group-hover:border-white/15">
           <div className="flex gap-2">
             <dt className="text-body-soft">Тип</dt>
             <dd className="text-ink-900">{object.type}</dd>

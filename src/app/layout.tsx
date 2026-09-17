@@ -45,13 +45,35 @@ export const metadata: Metadata = {
     'ООО «АРММАКС-СТРОЙ» — генподряд и строительство объектов капитального строительства в Новосибирске и Сибирском федеральном округе: технические условия, земельный участок, проектирование, общестрой, ввод в эксплуатацию.',
   applicationName: company.name,
   alternates: { canonical: '/' },
+  // Картинка превью лежит в public/og-preview.jpg и объявлена здесь руками.
+  // Файловая конвенция (src/app/opengraph-image.jpg) не подошла: она молча
+  // перебивает openGraph.images целиком, а подпись к картинке берёт только
+  // из .alt.txt — его читает webpack-загрузчик, тогда как сборка идёт на
+  // Turbopack, и alt терялся. Пересобрать картинку можно из
+  // images/og-preview.html — там та же вёрстка, что на первом экране.
+  // Соцсети кешируют превью по URL, поэтому новую версию кладём под новым
+  // именем (og-preview-2.jpg), иначе в ленте останется старая.
+  //
+  // title и description здесь намеренно не заданы: openGraph наследуется
+  // целиком, и с ними ссылка на любую внутреннюю страницу показывала бы
+  // заголовок главной. Без них Next подставляет title и description
+  // самой страницы.
   openGraph: {
     type: 'website',
     locale: 'ru_RU',
     siteName: requisites.legalName,
     url: site.url,
-    title: `${requisites.legalName} — строительство под ключ`,
-    description: company.tagline,
+    images: [
+      {
+        url: '/og-preview.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'ООО «АРММАКС-СТРОЙ»: строительство под ключ — от технических условий до ввода в эксплуатацию. Новосибирск и Сибирский федеральный округ.',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
   },
   robots: noindex ? { index: false, follow: false } : { index: true, follow: true },
   ...(site.yandexVerification ? { verification: { yandex: site.yandexVerification } } : {}),

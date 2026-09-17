@@ -6,7 +6,8 @@ import { BreadcrumbsJsonLd } from '@/components/JsonLd'
 import { advantages, awards, permits } from '@/content/company'
 
 export const metadata: Metadata = {
-  title: 'О компании — ООО «АРММАКС-СТРОЙ», Новосибирск',
+  // absolute: имя компании уже в заголовке, шаблон дописал бы его второй раз
+  title: { absolute: 'О компании — ООО «АРММАКС-СТРОЙ», Новосибирск' },
   description:
     'ООО «АРММАКС-СТРОЙ»: 25 лет в строительстве, объекты капитального строительства в Новосибирске и СФО. Награды Министерства строительства и Госстройнадзора Новосибирской области.',
   alternates: { canonical: '/o-kompanii' },

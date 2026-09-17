@@ -1,4 +1,5 @@
-import Link from 'next/link'
+'use client'
+
 import { ArrowLink } from './ArrowLink'
 import { FacetTile } from './FacetTile'
 import { Marker } from './Marker'
@@ -9,6 +10,13 @@ import { sectors } from '@/content/sectors'
  * Тёмный блок с сеткой направлений — приём Skender «Expertise for every market».
  * Каждая строка подчёркнута и работает как ссылка: под эти формулировки
  * позже встанут посадочные страницы под запросы вида «[объект] Новосибирск».
+ *
+ * Пока страниц нет, строка ведёт к форме внизу этой же страницы, а не на
+ * «Контакты»: уход на другую страницу за формой, которая и так в двух экранах
+ * ниже, читается как промах. Выбранный тип подставляется в комментарий —
+ * иначе нажатие не несёт информации и человек заново набирает то же самое.
+ *
+ * Блок стоит только на главной, где форма и живёт под якорем #zayavka.
  *
  * Справа от заголовка пустовало место — туда уходит гранёная стена,
  * обрезанная краем экрана. Она приглушена маской и не спорит с текстом,
@@ -47,8 +55,9 @@ export function SectorsGrid() {
           <ul className="mt-14 grid gap-x-10 sm:grid-cols-2 lg:mt-20 lg:grid-cols-4">
             {sectors.map((sector) => (
               <li key={sector} className="flex">
-                <Link
-                  href="/kontakty#zayavka"
+                <a
+                  href="#zayavka"
+                  onClick={() => prefillObjectType(sector)}
                   className="group flex h-full w-full items-end justify-between gap-4 border-b border-white/20 pt-5 pb-4 text-[clamp(1.05rem,1.6vw,1.4rem)] leading-snug font-semibold tracking-[-0.01em] text-white transition-colors hover:border-accent-500"
                 >
                   {sector}
@@ -58,18 +67,32 @@ export function SectorsGrid() {
                   >
                     →
                   </span>
-                </Link>
+                </a>
               </li>
             ))}
           </ul>
         </Reveal>
 
         <div className="mt-14">
-          <ArrowLink href="/kontakty#zayavka" tone="light">
+          <ArrowLink href="#zayavka" tone="light">
             Обсудить объект
           </ArrowLink>
         </div>
       </div>
     </section>
   )
+}
+
+/**
+ * Подставляет выбранный тип объекта в комментарий формы.
+ *
+ * Поле неуправляемое, значение читается из FormData при отправке, поэтому
+ * записываем напрямую. Уже набранный текст не трогаем: человек мог начать
+ * заполнять форму, вернуться наверх и уточнить тип — затереть его описание
+ * было бы хуже, чем не подставить ничего.
+ */
+function prefillObjectType(sector: string) {
+  const message = document.querySelector<HTMLTextAreaElement>('#lead-message')
+  if (!message || message.value.trim()) return
+  message.value = `Тип объекта: ${sector}. `
 }

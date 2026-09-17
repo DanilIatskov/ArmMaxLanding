@@ -5,7 +5,8 @@ import { BreadcrumbsJsonLd } from '@/components/JsonLd'
 import { contacts, requisites } from '@/content/company'
 
 export const metadata: Metadata = {
-  title: 'Реквизиты ООО «АРММАКС-СТРОЙ»',
+  // absolute: имя компании уже в заголовке, шаблон дописал бы его второй раз
+  title: { absolute: 'Реквизиты ООО «АРММАКС-СТРОЙ» — ИНН, ОГРН, адрес' },
   description:
     'Полные реквизиты ООО «АРММАКС-СТРОЙ»: наименование, ИНН, КПП, ОГРН, юридический адрес, банковские реквизиты и контакты.',
   alternates: { canonical: '/rekvizity' },

@@ -6,7 +6,8 @@ import { BreadcrumbsJsonLd } from '@/components/JsonLd'
 import { contacts } from '@/content/company'
 
 export const metadata: Metadata = {
-  title: 'Контакты — АРММАКС-СТРОЙ, Новосибирск',
+  // absolute: имя компании уже в заголовке, шаблон дописал бы его второй раз
+  title: { absolute: 'Контакты АРММАКС-СТРОЙ — телефон, адрес, Новосибирск' },
   description:
     'Телефоны, почта и адрес офиса ООО «АРММАКС-СТРОЙ» в Новосибирске: ул. Б. Хмельницкого, 33/1, офис 6. Форма заявки на строительство.',
   alternates: { canonical: '/kontakty' },

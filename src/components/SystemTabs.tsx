@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ArrowButton } from './ArrowButton'
 import { ArrowLink } from './ArrowLink'
 import Image from 'next/image'
@@ -18,6 +18,7 @@ export function SystemTabs() {
   // Уходящий кадр держим в DOM, пока он выезжает из рамки.
   const [leaving, setLeaving] = useState<number | null>(null)
   const service = services[active]
+  const detailsRef = useRef<HTMLDivElement>(null)
 
   // Направление берём до заворота: go(4 + 1) — это всё ещё «вперёд»,
   // хотя активным станет нулевой этап.
@@ -27,6 +28,22 @@ export function SystemTabs() {
     setDirection(next < active ? 'prev' : 'next')
     setLeaving(active)
     setActive(target)
+  }
+
+  // На телефоне список этапов стоит над панелью, и по нажатию менялась только
+  // картинка далеко внизу экрана — расписанный этап оставался за кадром.
+  // Подтягиваем к нему. Отступ под шапку даёт scroll-padding-top у html,
+  // плавность гасится там же при prefers-reduced-motion.
+  //
+  // Прокручиваем даже при повторном нажатии на выбранную вкладку: человек
+  // жмёт её именно потому, что не увидел результата первого нажатия.
+  //
+  // От lg список и панель стоят рядом, текст и так на экране — там не трогаем.
+  // Стрелки перелистывания живут внутри самой панели и сюда не заходят.
+  const selectTab = (next: number) => {
+    go(next)
+    if (window.matchMedia('(min-width: 64rem)').matches) return
+    detailsRef.current?.scrollIntoView({ block: 'start' })
   }
 
   // Снимаем уходящий кадр, когда проезд закончился: держать его дольше незачем,
@@ -60,7 +77,7 @@ export function SystemTabs() {
                     id={`system-tab-${i}`}
                     aria-selected={selected}
                     aria-controls="system-panel"
-                    onClick={() => go(i)}
+                    onClick={() => selectTab(i)}
                     // Отрицательные поля выпускают тёмную заливку за колонку,
                     // чтобы текст остался на вертикали заголовка секции.
                     className={`group -mx-5 flex border-b px-5 py-6 text-left transition-colors ${
@@ -95,7 +112,9 @@ export function SystemTabs() {
                 <StepTile index={active} leaving={leaving} direction={direction} onGo={go} />
               </div>
 
-              <div className="flex flex-col sm:col-span-7">
+              {/* Цель прокрутки. От sm колонка стоит вровень с кадром, так что
+                  на планшете в кадр попадает и снимок, и текст. */}
+              <div ref={detailsRef} className="flex flex-col sm:col-span-7">
                 <p className="eyebrow text-brand-500">
                   Этап {String(active + 1).padStart(2, '0')}
                 </p>

@@ -25,7 +25,9 @@ export async function generateMetadata({
     title: service.seo.title,
     description: service.seo.description,
     alternates: { canonical: `/uslugi/${service.slug}` },
-    openGraph: { title: service.seo.title, description: service.seo.description },
+    // openGraph здесь не задаём: свой блок заменил бы родительский целиком
+    // и страница осталась бы без картинки превью. Заголовок и описание Next
+    // подставит из title и description выше.
   }
 }
 

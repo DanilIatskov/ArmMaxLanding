@@ -6,7 +6,7 @@ import { ObjectCard } from '@/components/ObjectCard'
 import { objects } from '@/content/objects'
 
 export const metadata: Metadata = {
-  title: 'Объекты — построено и сдано',
+  title: 'Объекты: построено и сдано',
   description:
     'Объекты капитального строительства, реализованные АРММАКС-СТРОЙ в Новосибирске и Сибирском федеральном округе: тип объекта, город, объём работ и год.',
   alternates: { canonical: '/obekty' },

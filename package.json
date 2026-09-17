@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "images": "bash scripts/prepare-images.sh"
+    "images": "bash scripts/prepare-images.sh",
+    "favicon": "node scripts/make-favicon.mjs"
   },
   "dependencies": {
     "next": "^16.3.5",
