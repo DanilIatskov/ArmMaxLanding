@@ -4,6 +4,7 @@ import Image from 'next/image'
 import heroStroyka from '@/assets/hero-stroyka.jpg'
 import Link from 'next/link'
 import { useCallback, useEffect, useState } from 'react'
+import { ArrowButton } from './ArrowButton'
 import { Marker } from './Marker'
 import { company } from '@/content/company'
 import { SLIDE_DURATION_MS, slides } from '@/content/slides'
@@ -153,33 +154,6 @@ function SlideNav({
         </div>
       </div>
     </div>
-  )
-}
-
-function ArrowButton({
-  label,
-  onClick,
-  direction,
-}: {
-  label: string
-  onClick: () => void
-  direction: 'prev' | 'next'
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-label={label}
-      className="flex size-9 items-center justify-center rounded-full border border-white/70 text-white transition-colors hover:border-white hover:bg-white hover:text-ink-900 lg:size-10"
-    >
-      <svg viewBox="0 0 24 24" fill="none" className="size-4 lg:size-[18px]" aria-hidden>
-        <path
-          d={direction === 'prev' ? 'M15 4l-8 8 8 8' : 'M9 4l8 8-8 8'}
-          stroke="currentColor"
-          strokeWidth="1.5"
-        />
-      </svg>
-    </button>
   )
 }
 

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { ArrowButton } from './ArrowButton'
 import { ArrowLink } from './ArrowLink'
 import Image from 'next/image'
 import { Marker } from './Marker'
@@ -13,6 +14,9 @@ import { services } from '@/content/services'
 export function SystemTabs() {
   const [active, setActive] = useState(0)
   const service = services[active]
+
+  // По кругу: с последнего этапа стрелка «вперёд» возвращает на первый.
+  const go = (next: number) => setActive((next + services.length) % services.length)
 
   return (
     <section className="bg-surface-muted py-16 md:py-section">
@@ -64,7 +68,7 @@ export function SystemTabs() {
           >
             <div className="grid gap-8 sm:grid-cols-12 sm:gap-10">
               <div className="sm:col-span-5">
-                <StepTile index={active} />
+                <StepTile index={active} onGo={go} />
               </div>
 
               <div className="flex flex-col sm:col-span-7">
@@ -96,7 +100,7 @@ export function SystemTabs() {
 }
 
 /** Кадр этапа с номером поверх. */
-function StepTile({ index }: { index: number }) {
+function StepTile({ index, onGo }: { index: number; onGo: (next: number) => void }) {
   const service = services[index]
 
   // 9:12 — оно же 3:4. Исходники горизонтальные (4:3), так что кадр режется
@@ -116,30 +120,36 @@ function StepTile({ index }: { index: number }) {
       {/* Затемнение снизу: без него номер тонет в светлых кадрах. */}
       <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-ink-950/85 via-ink-950/10 to-transparent" />
 
-      {/* Номер в квадратной рамке — тот же мотив, что у маркеров по всей вёрстке.
-          Рамка обводится при смене вкладки, как полоса прогресса в слайдере
-          первого экрана. Периметр 152 = 4 × 38 при стороне 38 в системе 40×40. */}
-      <span className="absolute bottom-5 left-5 flex size-14 items-center justify-center text-white lg:size-16">
-        <svg viewBox="0 0 40 40" className="absolute inset-0 size-full" aria-hidden>
-          <rect x="1" y="1" width="38" height="38" fill="none" stroke="currentColor" strokeOpacity={0.35} strokeWidth={1} />
-          <rect
-            // key перезапускает обводку на каждом этапе.
-            key={service.slug}
-            className="ring-draw"
-            x="1"
-            y="1"
-            width="38"
-            height="38"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={1.5}
-            style={{ '--len': 152 } as React.CSSProperties}
-          />
-        </svg>
-        <span className="font-condensed text-[20px] leading-none font-normal lg:text-[24px]">
-          {String(index + 1).padStart(2, '0')}
-        </span>
-      </span>
+      {/* Счётчик этапов: надпись, крупный номер и общее количество.
+          Видно не только где ты сейчас, но и сколько всего осталось. */}
+      <div className="absolute bottom-5 left-5 text-white">
+        <p className="eyebrow text-white/75">Этап</p>
+
+        <p className="mt-1 flex items-baseline gap-2.5">
+          <span className="font-condensed text-[clamp(2.75rem,5.5vw,3.75rem)] leading-none font-bold">
+            {String(index + 1).padStart(2, '0')}
+          </span>
+          <span className="font-condensed text-[17px] leading-none font-normal text-white/50">
+            / {String(services.length).padStart(2, '0')}
+          </span>
+        </p>
+      </div>
+
+      {/* Перелистывание в паре с номером: он слева внизу, стрелки справа. */}
+      <div className="absolute right-5 bottom-5 flex gap-2.5">
+        <ArrowButton
+          tone="dark"
+          direction="prev"
+          label="Предыдущий этап"
+          onClick={() => onGo(index - 1)}
+        />
+        <ArrowButton
+          tone="dark"
+          direction="next"
+          label="Следующий этап"
+          onClick={() => onGo(index + 1)}
+        />
+      </div>
     </div>
   )
 }
