@@ -102,7 +102,12 @@ function GlanceCell({ cell, index }: { cell: Cell; index: number }) {
 
   if (cell.kind === 'image') {
     return (
-      <div className="aspect-square p-2">
+      // Без aspect-square: ячейку растягивает строка. Квадрат тут жёстко
+      // фиксировал высоту, и если соседняя ячейка с цифрой перерастала свой
+      // квадрат (подпись ушла на лишнюю строку), снимок оставался низким
+      // и снизу вылезала серая подложка сетки. В Chrome не воспроизводилось,
+      // в Safari на iOS — да.
+      <div className="p-2">
         <Reveal delay={delay} className="relative h-full w-full overflow-hidden bg-surface-sunken">
           <Image
             src={cell.src}
@@ -118,5 +123,5 @@ function GlanceCell({ cell, index }: { cell: Cell; index: number }) {
 
   // Пустая ячейка: держит ритм сетки. На мобильном её скрываем —
   // в две колонки пустоты съедают экран.
-  return <div className="hidden aspect-square lg:block" />
+  return <div className="hidden lg:block" />
 }
