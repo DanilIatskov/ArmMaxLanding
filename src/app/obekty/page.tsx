@@ -19,7 +19,7 @@ export default function ObjectsPage() {
       <PageHero
         eyebrow="Портфолио"
         title="Объекты"
-        lead="Город, тип объекта, объём работ и год. Раздел ведёт администратор сайта."
+        lead="Город, тип объекта, объём работ и год."
         breadcrumbs={[{ name: 'Объекты', url: '/obekty' }]}
       />
 
@@ -38,9 +38,8 @@ export default function ObjectsPage() {
           <div className="max-w-2xl border border-dashed border-line-strong p-10">
             <h2 className="text-xl leading-snug">Раздел готовится</h2>
             <p className="mt-5 text-[15px] leading-relaxed">
-              Вёрстка карточек и карта с метками готовы — не хватает материалов. Для каждого объекта
-              нужны: название, город, тип, год, объём работ и фотографии, которые разрешено
-              публиковать.
+              Готовим материалы по объектам. Скоро здесь появятся карточки с городом, типом,
+              годом и объёмом работ.
             </p>
             <div className="mt-8">
               <ButtonLink href="/kontakty#zayavka" variant="outline">
@@ -54,8 +53,7 @@ export default function ObjectsPage() {
       <Section tone="muted">
         <h2 className="rule-accent text-2xl">География работ</h2>
         <p className="mt-8 max-w-2xl text-[15px] leading-relaxed">
-          Работаем по Сибирскому федеральному округу. Карта с метками объектов появится здесь после
-          подключения Яндекс.Карт — ключ задаётся переменной NEXT_PUBLIC_YANDEX_MAPS_API_KEY.
+          Работаем по Сибирскому федеральному округу. Здесь появится карта с метками объектов.
         </p>
         <div
           aria-hidden

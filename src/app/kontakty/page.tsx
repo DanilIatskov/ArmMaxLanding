@@ -105,8 +105,7 @@ export default function ContactsPage() {
       <Section tone="muted">
         <h2 className="rule-accent text-2xl">Как доехать</h2>
         <p className="mt-8 max-w-2xl text-[15px] leading-relaxed">
-          {contacts.office}. Карта появится после подключения Яндекс.Карт — ключ задаётся переменной
-          NEXT_PUBLIC_YANDEX_MAPS_API_KEY.
+          {contacts.office}. Здесь появится карта проезда.
         </p>
         <div
           aria-hidden

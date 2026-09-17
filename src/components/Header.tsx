@@ -208,7 +208,11 @@ export function Header() {
       {activeItem?.mega && (
         <div className="hidden border-t border-line bg-surface shadow-[0_2px_8px_rgba(11,16,40,0.1)] lg:block">
           <div className="flex">
-            <div className="pl-edge w-[38%] max-w-[560px] shrink-0 bg-surface-muted py-7 pr-10">
+            {/* Без max-width: `pl-edge` растёт вместе с шириной окна, и при
+                фиксированном потолке колонки место под текст схлопывалось —
+                на 2560px от неё оставалось 24 пикселя. Проценты растут вместе
+                с отступом, поэтому текст всегда получает свою долю. */}
+            <div className="pl-edge w-[38%] shrink-0 bg-surface-muted py-7 pr-10">
               <h2 className="font-condensed text-[22px] leading-tight font-bold uppercase text-ink-900">
                 {activeItem.mega.title}
               </h2>

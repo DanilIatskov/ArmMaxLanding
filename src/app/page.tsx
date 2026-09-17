@@ -91,7 +91,7 @@ export default function HomePage() {
           <SectionHeading
             eyebrow="Объекты"
             title="Что построено"
-            lead="Карточки объектов: город, тип, объём работ и год. Раздел ведёт администратор сайта."
+            lead="Город, тип объекта, объём работ и год."
           />
         </Reveal>
 
@@ -110,8 +110,8 @@ export default function HomePage() {
         ) : (
           <div className="mt-12 border border-dashed border-line-strong p-10 lg:p-14">
             <p className="max-w-2xl text-[15px] leading-relaxed">
-              Раздел готов к наполнению. Под задачу сайта нужны крупные объекты: название, город,
-              год, объём работ и фото с разрешением на публикацию.
+              Готовим материалы по объектам. Скоро здесь появятся карточки с городом, годом
+              и объёмом работ.
             </p>
           </div>
         )}
@@ -151,7 +151,7 @@ export default function HomePage() {
         </div>
       </Section>
 
-      <div className="bg-ink-950 py-16 md:py-section">
+      <div className="bg-ink-900 py-16 md:py-section">
         <Container>
           <div className="grid gap-14 lg:grid-cols-2 lg:gap-24">
             <div>
