@@ -1,8 +1,9 @@
 import Link from 'next/link'
 import type { ComponentProps, ReactNode } from 'react'
+import { Marker } from './Marker'
 
 export function Container({ children, className = '' }: { children: ReactNode; className?: string }) {
-  return <div className={`mx-auto w-full max-w-[1200px] px-5 md:px-8 ${className}`}>{children}</div>
+  return <div className={`mx-auto w-full max-w-[1680px] px-5 lg:px-14 ${className}`}>{children}</div>
 }
 
 export function Section({
@@ -19,7 +20,7 @@ export function Section({
   const tones = {
     light: 'bg-surface',
     muted: 'bg-surface-muted',
-    dark: 'bg-ink-900 text-white/70',
+    dark: 'bg-ink-950 text-white/60',
   }
 
   return (
@@ -41,25 +42,20 @@ export function SectionHeading({
   tone?: 'light' | 'dark'
 }) {
   return (
-    <header className="max-w-3xl">
+    <header className="max-w-4xl">
       {eyebrow && (
-        <p
-          className={`mb-4 text-xs font-semibold tracking-[0.2em] uppercase ${
-            tone === 'dark' ? 'text-accent-400' : 'text-brand-500'
-          }`}
-        >
+        <p className={`eyebrow flex items-center gap-3 ${tone === 'dark' ? 'text-white/50' : 'text-body-soft'}`}>
+          <Marker />
           {eyebrow}
         </p>
       )}
       <h2
-        className={`rule-accent text-3xl md:text-[2.5rem] md:leading-[1.14] ${
-          tone === 'dark' ? 'text-white' : ''
-        }`}
+        className={`mt-6 text-[clamp(1.9rem,4vw,3.5rem)] leading-[1.03] ${tone === 'dark' ? 'text-white' : ''}`}
       >
         {title}
       </h2>
       {lead && (
-        <p className={`mt-7 text-lg leading-relaxed ${tone === 'dark' ? 'text-white/65' : 'text-body'}`}>
+        <p className={`mt-8 max-w-2xl text-lg leading-relaxed ${tone === 'dark' ? 'text-white/60' : 'text-body'}`}>
           {lead}
         </p>
       )}
@@ -74,12 +70,12 @@ type ButtonProps = {
 }
 
 const buttonBase =
-  'inline-flex items-center justify-center gap-2 rounded-card px-7 py-4 text-sm font-semibold tracking-wide transition-colors duration-200'
+  'inline-flex items-center justify-center gap-2 px-8 py-4 text-[13px] font-bold tracking-[0.1em] uppercase transition-colors duration-200'
 
 const buttonVariants = {
   primary: 'bg-brand-500 text-white hover:bg-brand-400',
   outline: 'border border-line-strong text-ink-900 hover:border-brand-500 hover:text-brand-500',
-  ghost: 'border border-white/25 text-white hover:border-accent-500 hover:text-accent-400',
+  ghost: 'border border-white/30 text-white hover:border-white hover:bg-white hover:text-ink-900',
 }
 
 export function ButtonLink({
@@ -112,7 +108,7 @@ export function Button({
 /** Поле, которое заказчик ещё не заполнил. Видно и на сайте, и на проверке. */
 export function Pending({ what }: { what: string }) {
   return (
-    <span className="inline-flex items-center rounded-card bg-surface-sunken px-2 py-0.5 text-sm text-body-soft italic">
+    <span className="inline-flex items-center bg-surface-sunken px-2 py-0.5 text-sm text-body-soft italic">
       {what} — уточняется
     </span>
   )

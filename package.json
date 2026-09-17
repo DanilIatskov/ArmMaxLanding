@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "images": "bash scripts/prepare-images.sh"
   },
   "dependencies": {
     "next": "^16.3.5",

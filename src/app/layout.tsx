@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Roboto } from 'next/font/google'
+import { Manrope, Roboto_Condensed } from 'next/font/google'
 import './globals.css'
 import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
@@ -7,12 +7,25 @@ import { OrganizationJsonLd } from '@/components/JsonLd'
 import { YandexMetrika } from '@/components/YandexMetrika'
 import { company, requisites, site } from '@/content/company'
 
-// Roboto — тот же шрифт, что на сайте СПК, который заказчик назвал образцом.
-// Кириллица полная, вес от 300 до 700 хватает на всю типографику.
-const roboto = Roboto({
+// Manrope: плотный гротеск с полной кириллицей. Референсы (suffolk.com,
+// skender.com) держатся на характерном гротеске с тугим трекингом — на Roboto
+// этот тон не собирается, он слишком нейтральный.
+const manrope = Manrope({
   subsets: ['cyrillic', 'latin'],
-  weight: ['300', '400', '500', '700'],
-  variable: '--font-roboto',
+  weight: ['400', '500', '600', '700', '800'],
+  variable: '--font-manrope',
+  display: 'swap',
+})
+
+// Roboto Condensed — логотип, навигация, заголовок первого экрана и крупные
+// цифры. В заголовке работают два веса сразу: Bold на утверждении,
+// Regular на пояснении; цифры набраны Light.
+// Узкий рубленый гротеск: набирает много пунктов меню в одну строку
+// и держит логотип плотным пятном без иконки.
+const condensed = Roboto_Condensed({
+  subsets: ['cyrillic', 'latin'],
+  weight: ['300', '400', '700'],
+  variable: '--font-roboto-condensed',
   display: 'swap',
 })
 
@@ -52,7 +65,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ru" className={roboto.variable}>
+    <html lang="ru" className={`${manrope.variable} ${condensed.variable}`}>
       <body className="flex min-h-screen flex-col">
         <a
           href="#main"

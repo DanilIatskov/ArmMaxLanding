@@ -1,13 +1,12 @@
 @import 'tailwindcss';
 
 /*
-  Палитра выведена из двух источников:
-  — логотип АРММАКС (гранёная «М»): #242d66, #2e3192, #4752a2, #1b75bc, #00adef
-  — референс ru-54.com (СПК): тёмный #060d28, синий #017efa, светлые #ebebeb / #f2f2f2
-  Строгий корпоративный тон: тёмно-синяя основа, много воздуха, один акцент.
+  Палитра — из логотипа АРММАКС (гранёная «М») и референса ru-54.com.
+  Пластика — из suffolk.com и skender.com: острые углы, волосяные линии сетки,
+  квадратный маркер перед надзаголовками, крупные цифры, много пустоты.
 */
 @theme {
-  --color-ink-950: #070b1f;
+  --color-ink-950: #05081a;
   --color-ink-900: #0b1028;
   --color-ink-800: #141b3d;
   --color-ink-700: #1e2754;
@@ -23,32 +22,39 @@
   --color-accent-400: #35c2f5;
 
   --color-surface: #ffffff;
-  --color-surface-muted: #f4f6fa;
-  --color-surface-sunken: #ebeef4;
-  --color-line: #e0e5ee;
-  --color-line-strong: #c8d0de;
+  --color-surface-muted: #f1f3f8;
+  --color-surface-sunken: #e6eaf2;
+  --color-line: #dfe4ee;
+  --color-line-strong: #c2cbdb;
 
   --color-body: #3c4763;
   --color-body-soft: #6a7691;
 
-  --font-sans: var(--font-roboto), system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-sans: var(--font-manrope), system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-condensed: var(--font-roboto-condensed), 'Roboto Condensed', system-ui, sans-serif;
 
-  --text-display: 3.5rem;
-  --text-display--line-height: 1.06;
-  --text-display--letter-spacing: -0.02em;
+  /* Углы острые: у обоих референсов скругления нет — так честнее для стройки. */
+  --radius-card: 0px;
 
-  --spacing-section: 6.5rem;
-
-  --radius-card: 2px;
+  --spacing-section: 7.5rem;
 
   --shadow-card: 0 1px 2px rgb(11 16 40 / 0.04), 0 8px 24px -12px rgb(11 16 40 / 0.14);
-  --shadow-card-hover: 0 2px 4px rgb(11 16 40 / 0.06), 0 18px 40px -16px rgb(11 16 40 / 0.22);
 }
 
 @layer base {
+  :root {
+    /* Один отступ от края для всех контейнеров сайта. */
+    --page-gutter: 1.25rem;
+  }
+
+  @media (min-width: 1024px) {
+    :root {
+      --page-gutter: 3.5rem;
+    }
+  }
+
   html {
     scroll-behavior: smooth;
-    /* Шапка липкая — якорные ссылки не должны уезжать под неё. */
     scroll-padding-top: 6rem;
   }
 
@@ -62,8 +68,12 @@
 
   h1, h2, h3, h4 {
     color: var(--color-ink-900);
+    /* Тот же узкий гротеск, что в шапке, логотипе и первом экране:
+       заголовки перестают спорить с навигацией. Отрицательный трекинг здесь
+       почти не нужен — начертание и так узкое. */
+    font-family: var(--font-condensed);
     font-weight: 700;
-    letter-spacing: -0.015em;
+    letter-spacing: -0.005em;
     text-wrap: balance;
   }
 
@@ -83,20 +93,152 @@
 }
 
 @layer components {
-  /* Тонкая линия-акцент под заголовками разделов — отсылка к гранёной «М» логотипа. */
-  .rule-accent::after {
-    content: '';
-    display: block;
-    width: 3.5rem;
-    height: 3px;
-    margin-top: 1.25rem;
-    background: linear-gradient(90deg, var(--color-brand-700), var(--color-accent-500));
+  /*
+    Для блоков во всю ширину: подводит содержимое к той же вертикали,
+    по которой выстроены контейнеры, хотя фон доходит до края экрана.
+  */
+  .pl-edge {
+    padding-left: max(var(--page-gutter), calc((100vw - 1680px) / 2 + var(--page-gutter)));
   }
+
+  .pr-edge {
+    padding-right: max(var(--page-gutter), calc((100vw - 1680px) / 2 + var(--page-gutter)));
+  }
+
+  /* Надзаголовок: мелкие прописные вразрядку. Квадратный маркер рисует <Marker/>. */
+  .eyebrow {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  /* Волосяная сетка Suffolk: фон-линия просвечивает в зазорах между ячейками. */
+  .hairline-grid {
+    background-color: var(--color-line);
+    display: grid;
+    gap: 1px;
+  }
+
+  .hairline-grid > * {
+    background-color: var(--color-surface);
+  }
+}
+
+/* Появление блоков при скролле. Класс снимает <Reveal/>, когда секция видна. */
+@layer utilities {
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .reveal-in {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Строка-бегунок: дублированная лента едет влево ровно на свою половину. */
+  .marquee-track {
+    animation: marquee 38s linear infinite;
+  }
+
+  .rise {
+    animation: rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .slide-progress {
+    transform-origin: left;
+    animation: slide-progress linear forwards;
+  }
+
+  .ring-draw {
+    stroke-dasharray: var(--len);
+    animation: ring-draw 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .facet {
+    /* Без fill-box трансформация считалась бы от начала координат svg,
+       и грани разъезжались бы по всей плитке вместо своего места. */
+    transform-box: fill-box;
+    transform-origin: center;
+    animation:
+      facet-in 0.55s cubic-bezier(0.16, 1, 0.3, 1) both,
+      facet-breathe 7s ease-in-out infinite;
+  }
+
+
+
+  .marquee-host:hover .marquee-track {
+    animation-play-state: paused;
+  }
+}
+
+/* Первый экран проявляется подъёмом: заголовок, затем кнопки. */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Грани плитки въезжают по диагонали, затем медленно дышат.
+   Итоговая прозрачность у каждой своя и приходит в --o. */
+@keyframes facet-in {
+  from { opacity: 0; transform: translate(-7%, -7%) scale(0.82); }
+  to { opacity: var(--o); transform: none; }
+}
+
+@keyframes facet-breathe {
+  0%, 100% { opacity: var(--o); }
+  50% { opacity: calc(var(--o) * 0.4); }
+}
+
+/* Рамка вокруг номера этапа обводится при смене вкладки.
+   Длину периметра передаёт --len: она разная у разных фигур. */
+@keyframes ring-draw {
+  from { stroke-dashoffset: var(--len); }
+  to { stroke-dashoffset: 0; }
+}
+
+/* Полоса прогресса активного слайда: заполняется за время показа. */
+@keyframes slide-progress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .facet {
+    animation: none;
+    opacity: var(--o);
+  }
+
+  .ring-draw {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+
+  /* Без автопрокрутки полоса всегда полная: она перестаёт быть таймером. */
+  .slide-progress {
+    animation: none;
+    transform: scaleX(1);
+  }
+
+  .rise {
+    animation: none;
   }
 
   *, *::before, *::after {

@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { Container } from './ui'
+import { Marker } from './Marker'
 
 export function PageHero({
   eyebrow,
@@ -13,13 +14,14 @@ export function PageHero({
   breadcrumbs?: { name: string; url: string }[]
 }) {
   return (
-    <div className="border-b border-line bg-surface-muted">
-      <Container className="py-14 md:py-20">
+    // Компенсация фиксированной шапки: 76px на мобильном, 100px от lg.
+    <div className="border-b border-line bg-surface-muted pt-[76px] lg:pt-[100px]">
+      <Container className="py-14 md:py-24">
         {breadcrumbs && (
-          <nav aria-label="Хлебные крошки" className="mb-8">
-            <ol className="flex flex-wrap items-center gap-2 text-sm text-body-soft">
+          <nav aria-label="Хлебные крошки" className="mb-10">
+            <ol className="flex flex-wrap items-center gap-2 text-xs text-body-soft">
               <li>
-                <Link href="/" className="hover:text-brand-500">
+                <Link href="/" className="transition-colors hover:text-brand-500">
                   Главная
                 </Link>
               </li>
@@ -29,7 +31,7 @@ export function PageHero({
                   {i === breadcrumbs.length - 1 ? (
                     <span className="text-body">{crumb.name}</span>
                   ) : (
-                    <Link href={crumb.url} className="hover:text-brand-500">
+                    <Link href={crumb.url} className="transition-colors hover:text-brand-500">
                       {crumb.name}
                     </Link>
                   )}
@@ -40,10 +42,13 @@ export function PageHero({
         )}
 
         {eyebrow && (
-          <p className="mb-4 text-xs font-semibold tracking-[0.2em] text-brand-500 uppercase">{eyebrow}</p>
+          <p className="eyebrow flex items-center gap-3 text-body-soft">
+            <Marker />
+            {eyebrow}
+          </p>
         )}
-        <h1 className="max-w-4xl text-3xl leading-[1.12] md:text-[2.75rem]">{title}</h1>
-        {lead && <p className="mt-7 max-w-2xl text-lg leading-relaxed">{lead}</p>}
+        <h1 className="mt-6 max-w-5xl text-[clamp(2.1rem,5vw,4.25rem)] leading-[1.02]">{title}</h1>
+        {lead && <p className="mt-8 max-w-2xl text-lg leading-relaxed">{lead}</p>}
       </Container>
     </div>
   )

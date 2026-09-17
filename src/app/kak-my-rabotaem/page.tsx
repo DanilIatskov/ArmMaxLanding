@@ -26,7 +26,9 @@ export default function ProcessPage() {
         <ol className="space-y-px overflow-hidden rounded-card bg-line">
           {stages.map((stage) => (
             <li key={stage.n} className="grid gap-5 bg-surface p-8 md:grid-cols-12 md:gap-10 lg:p-12">
-              <span className="text-3xl font-bold text-brand-600 md:col-span-2">{stage.n}</span>
+              <span className="font-condensed text-[clamp(2rem,3.5vw,3rem)] leading-none font-light tracking-[-0.02em] text-brand-600 md:col-span-2">
+                {stage.n}
+              </span>
               <div className="md:col-span-6">
                 <h2 className="text-xl leading-snug">{stage.title}</h2>
                 <p className="mt-4 text-[15px] leading-relaxed">{stage.text}</p>

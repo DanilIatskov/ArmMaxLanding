@@ -4,9 +4,18 @@
  * на подключение [город]», «генподряд [город]»).
  */
 
+import type { StaticImageData } from 'next/image'
+import obshchestroy from '@/assets/stages/obshchestroy-i-inzheneriya.jpg'
+import proektirovanie from '@/assets/stages/proektirovanie.jpg'
+import tehnicheskieUsloviya from '@/assets/stages/tehnicheskie-usloviya.jpg'
+import vvod from '@/assets/stages/vvod-v-ekspluataciyu.jpg'
+import zemelnyyUchastok from '@/assets/stages/zemelnyy-uchastok.jpg'
+
 export type Service = {
   slug: string
   title: string
+  /** Кадр этапа для блока «Как мы строим». */
+  image: StaticImageData
   short: string
   /** Заголовок первого экрана подстраницы — длиннее, чем в карточке. */
   lead: string
@@ -18,6 +27,7 @@ export type Service = {
 export const services: Service[] = [
   {
     slug: 'tehnicheskie-usloviya',
+    image: tehnicheskieUsloviya,
     title: 'Технические условия и точки подключения',
     short: 'Получаем ТУ на воду, канализацию, тепло и электричество — и выбираем точку, от которой зависит смета.',
     lead: 'Технические условия и точки подключения',
@@ -39,6 +49,7 @@ export const services: Service[] = [
   },
   {
     slug: 'zemelnyy-uchastok',
+    image: zemelnyyUchastok,
     title: 'Подбор и оформление земельного участка',
     short: 'Ищем участок под задачу заказчика и доводим документы до состояния, в котором на нём можно строить.',
     lead: 'Подбор и оформление земельного участка',
@@ -60,6 +71,7 @@ export const services: Service[] = [
   },
   {
     slug: 'proektirovanie',
+    image: proektirovanie,
     title: 'Проектирование',
     short: 'Разделы АР, КЖ, КМ, АС и инженерные сети — в одном проекте, без стыковки чужих файлов.',
     lead: 'Проектирование: АР, КЖ, КМ, АС, инженерные сети',
@@ -83,6 +95,7 @@ export const services: Service[] = [
   },
   {
     slug: 'obshchestroy-i-inzheneriya',
+    image: obshchestroy,
     title: 'Общестрой и инженерия',
     short: 'Генподряд по объектам капитального строительства: коробка, сети, отделка, благоустройство.',
     lead: 'Общестроительные работы и инженерия',
@@ -106,6 +119,7 @@ export const services: Service[] = [
   },
   {
     slug: 'vvod-v-ekspluataciyu',
+    image: vvod,
     title: 'Ввод в эксплуатацию',
     short: 'Сопровождаем объект в Госстройнадзоре до заключения о соответствии и разрешения на ввод.',
     lead: 'Ввод в эксплуатацию и сопровождение в Госстройнадзоре',
