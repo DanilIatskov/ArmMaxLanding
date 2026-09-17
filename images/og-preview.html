@@ -1,17 +1,21 @@
 <!doctype html>
+<!--
+  Вёрстка картинки превью для ссылок (1200×630). Собирается командой
+  npm run og: скрипт подставляет в фигурные скобки путь к проекту и логотип,
+  затем снимает кадр. Открывать файл напрямую смысла нет — подстановки
+  останутся текстом. Кадр и набор строк повторяют первый экран сайта.
+-->
 <html lang="ru"><head><meta charset="utf-8">
 <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&family=Manrope:wght@500&subset=cyrillic,latin&display=block" rel="stylesheet">
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
   body{width:1200px;height:630px;overflow:hidden;position:relative;background:#05081a;
        font-family:'Manrope',sans-serif;-webkit-font-smoothing:antialiased}
-  .photo{position:absolute;inset:0;background:url('file:///Users/viachaskul/Documents/GitHub/ArmMaxLanding/src/assets/hero-stroyka.jpg') center/cover no-repeat}
+  .photo{position:absolute;inset:0;background:url('{{ROOT}}/src/assets/hero-stroyka.jpg') center/cover no-repeat}
   .scrim{position:absolute;inset:0;
          background:linear-gradient(90deg,#05081aF2 0%,#05081aD9 45%,#05081a59 100%)}
   .wrap{position:relative;height:100%;display:flex;flex-direction:column;justify-content:space-between;padding:64px 72px}
-  .logo{display:flex;width:fit-content;align-self:flex-start;flex-direction:column;color:#fff;font-family:'Roboto Condensed',sans-serif}
-  .logo b{font-size:44px;font-weight:700;letter-spacing:.02em;line-height:.85}
-  .logo span{display:flex;justify-content:space-between;width:100%;font-size:15px;font-weight:700;margin-top:7px;line-height:1}
+  .logo{height:58px;width:auto;align-self:flex-start;color:#fff}
   h1{font-family:'Roboto Condensed',sans-serif;font-weight:700;text-transform:uppercase;
      font-size:76px;line-height:1.02;letter-spacing:-.007em;color:#fff;max-width:900px}
   h1 em{font-style:normal;font-weight:400}
@@ -23,7 +27,7 @@
 <body>
   <div class="photo"></div><div class="scrim"></div>
   <div class="wrap">
-    <div class="logo"><b>АРММАКС</b><span><i style="font-style:normal">С</i><i style="font-style:normal">Т</i><i style="font-style:normal">Р</i><i style="font-style:normal">О</i><i style="font-style:normal">Й</i></span></div>
+    {{LOGO}}
     <h1>Строительство под ключ. <em>От технических условий до ввода в эксплуатацию</em></h1>
     <div class="foot"><span class="sq"></span><p>Новосибирск · Сибирский федеральный округ</p><span class="phone">+7 (983) 300-70-07</span></div>
   </div>

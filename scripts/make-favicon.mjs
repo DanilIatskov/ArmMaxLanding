@@ -1,144 +1,66 @@
 /**
- * Собирает фавикон из присланного оригинала логотипа: images/logo.jpg
+ * Собирает фавикон из вектора логотипа: images/logo.svg
  * → src/app/icon.png (256×256) и src/app/apple-icon.png (180×180).
  *
- * Зачем скрипт, а не ручной кроп: в оригинале знак занимает чуть больше
- * половины кадра, и в поле вкладки 16×16 от него осталось бы несколько
- * пикселей краски. Границы знака ищутся по пикселям, кадр обрезается по ним,
- * поля — 10%. Так знак читается на вкладке и остаётся фирменным один в один.
+ * Берётся только знак «М», без надписи: на вкладке 16×16 от слова остаётся
+ * серая полоска. Знак кадрируется по своему габариту с полями в 10% —
+ * в исходнике вокруг него пустое место под надпись, и без обрезки знак
+ * ужался бы до нескольких пикселей.
  *
- * ImageMagick и PIL в проекте нет, поэтому обрезка и пересчёт идут в canvas
- * внутри headless Chrome — он и так нужен для съёмки превью ссылок.
+ * Знак берётся фирменный, с градиентами, и кладётся на тёмный квадрат —
+ * тот же цвет, что у themeColor сайта. На светлом фоне эти градиенты
+ * почти сливались бы с ним, а на тёмном знак читается как в оригинале.
+ *
+ * ImageMagick и PIL в проекте нет, поэтому рисует headless Chrome.
  *
  * Запуск: npm run favicon
  */
-import { spawn } from 'node:child_process'
 import fs from 'node:fs'
 import path from 'node:path'
+import { readLogo, bounds, withChrome } from './logo-source.mjs'
 
-const ROOT = path.join(import.meta.dirname, '..')
-const SOURCE = path.join(ROOT, 'images/logo.jpg')
-const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
-const PORT = 9334
+/** Тот же тёмный, что в viewport.themeColor. */
+const BACKDROP = '#0b1028'
+const PAD = 0.1
 
-if (!fs.existsSync(SOURCE)) {
-  console.error(`Нет исходника: ${SOURCE}`)
-  process.exit(1)
-}
+const { mark, markElements, defs, root } = readLogo()
+const box = bounds(mark)
 
-const chrome = spawn(CHROME, [
-  '--headless=new',
-  `--remote-debugging-port=${PORT}`,
-  '--disable-gpu',
-  'about:blank',
-], { stdio: 'ignore' })
+// Квадрат по большей стороне: иначе знак растянет.
+const side = Math.max(box.width, box.height)
+const pad = side * PAD
+const size = side + pad * 2
+const viewBox = [
+  box.minX - (size - box.width) / 2,
+  box.minY - (size - box.height) / 2,
+  size,
+  size,
+].join(' ')
 
-// Ждём, пока Chrome поднимет отладочный порт: сразу после spawn его ещё нет.
-let targets
-for (let attempt = 0; attempt < 40; attempt++) {
-  await new Promise((r) => setTimeout(r, 250))
-  try {
-    targets = await (await fetch(`http://localhost:${PORT}/json/list`)).json()
-    if (targets.some((t) => t.type === 'page')) break
-  } catch {}
-}
-if (!targets?.some((t) => t.type === 'page')) {
-  chrome.kill()
-  throw new Error('Chrome не поднялся')
-}
+const markup = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}" width="512" height="512">
+<rect x="${box.minX - size}" y="${box.minY - size}" width="${size * 3}" height="${size * 3}" fill="${BACKDROP}"/>
+${markElements.join('\n')}
+${defs}
+</svg>`
 
-const ws = new WebSocket(targets.find((t) => t.type === 'page').webSocketDebuggerUrl)
-await new Promise((r) => { ws.onopen = r })
+const files = await withChrome(9360, async (send) => {
+  await send('Page.enable')
+  await send('Runtime.enable')
 
-let id = 0
-const pending = new Map()
-ws.onmessage = (m) => {
-  const data = JSON.parse(m.data)
-  if (pending.has(data.id)) {
-    pending.get(data.id)(data)
-    pending.delete(data.id)
+  const render = async (px) => {
+    await send('Emulation.setDeviceMetricsOverride', { width: px, height: px, deviceScaleFactor: 1, mobile: false })
+    const page = `<body style="margin:0">${markup.replace('width="512" height="512"', `width="${px}" height="${px}"`)}</body>`
+    await send('Page.navigate', { url: 'data:text/html;charset=utf-8,' + encodeURIComponent(page) })
+    await new Promise((r) => setTimeout(r, 600))
+    const shot = await send('Page.captureScreenshot', { format: 'png' })
+    return Buffer.from(shot.result.data, 'base64')
   }
-}
-const send = (method, params = {}) =>
-  new Promise((r) => {
-    const i = ++id
-    pending.set(i, r)
-    ws.send(JSON.stringify({ id: i, method, params }))
-  })
 
-await send('Runtime.enable')
-
-const base64 = fs.readFileSync(SOURCE).toString('base64')
-const response = await send('Runtime.evaluate', {
-  awaitPromise: true,
-  returnByValue: true,
-  expression: `(async () => {
-    const img = new Image()
-    img.src = 'data:image/jpeg;base64,${base64}'
-    await img.decode()
-
-    const frame = document.createElement('canvas')
-    frame.width = img.width
-    frame.height = img.height
-    const ctx = frame.getContext('2d', { willReadFrequently: true })
-    ctx.drawImage(img, 0, 0)
-    const px = ctx.getImageData(0, 0, frame.width, frame.height).data
-
-    // Границы знака — всё, что заметно темнее фона. Порог 245, а не 255:
-    // JPEG размывает белый до ~250, но краска знака сильно ниже.
-    let minX = frame.width, minY = frame.height, maxX = -1, maxY = -1
-    for (let y = 0; y < frame.height; y++) {
-      for (let x = 0; x < frame.width; x++) {
-        const i = (y * frame.width + x) * 4
-        if (px[i] < 245 || px[i + 1] < 245 || px[i + 2] < 245) {
-          if (x < minX) minX = x
-          if (x > maxX) maxX = x
-          if (y < minY) minY = y
-          if (y > maxY) maxY = y
-        }
-      }
-    }
-    if (maxX < 0) throw new Error('Знак не найден: кадр целиком светлее порога')
-
-    // Кадрируем квадратом по большей стороне — иначе знак растянет.
-    const markWidth = maxX - minX + 1
-    const markHeight = maxY - minY + 1
-    const side = Math.max(markWidth, markHeight)
-    const box = side + Math.round(side * 0.10) * 2
-    const sx = minX - (box - markWidth) / 2
-    const sy = minY - (box - markHeight) / 2
-
-    const render = (size) => {
-      const out = document.createElement('canvas')
-      out.width = out.height = size
-      const g = out.getContext('2d')
-      g.imageSmoothingQuality = 'high'
-      // Оригинал — JPEG без прозрачности: подкладываем тот же белый,
-      // иначе по краям знака полезет чёрный фон канваса.
-      g.fillStyle = '#ffffff'
-      g.fillRect(0, 0, size, size)
-      g.drawImage(img, sx, sy, box, box, 0, 0, size, size)
-      return out.toDataURL('image/png').split(',')[1]
-    }
-
-    return JSON.stringify({
-      mark: { minX, minY, maxX, maxY, box },
-      icon: render(256),
-      appleIcon: render(180),
-    })
-  })()`,
+  return { icon: await render(256), apple: await render(180) }
 })
 
-ws.close()
-chrome.kill()
+fs.writeFileSync(path.join(root, 'src/app/icon.png'), files.icon)
+fs.writeFileSync(path.join(root, 'src/app/apple-icon.png'), files.apple)
 
-if (response.result?.exceptionDetails) {
-  throw new Error(response.result.exceptionDetails.exception?.description ?? 'Ошибка в канвасе')
-}
-
-const result = JSON.parse(response.result.result.value)
-fs.writeFileSync(path.join(ROOT, 'src/app/icon.png'), Buffer.from(result.icon, 'base64'))
-fs.writeFileSync(path.join(ROOT, 'src/app/apple-icon.png'), Buffer.from(result.appleIcon, 'base64'))
-
-console.log(`Знак в оригинале: ${JSON.stringify(result.mark)}`)
+console.log(`Габарит знака: ${JSON.stringify(box)}`)
 console.log('Готово: src/app/icon.png (256), src/app/apple-icon.png (180)')

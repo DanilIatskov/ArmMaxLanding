@@ -133,10 +133,10 @@ export function Header() {
               className={`shrink-0 transition-opacity hover:opacity-70 ${light ? 'text-ink-900' : 'text-white'}`}
             >
               <span className="lg:hidden">
-                <Logo size="sm" />
+                <Logo size="sm" surface={light ? 'light' : 'dark'} />
               </span>
               <span className="hidden lg:block">
-                <Logo />
+                <Logo surface={light ? 'light' : 'dark'} />
               </span>
             </Link>
           </div>
