@@ -80,7 +80,9 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false)
   const pathname = usePathname()
 
-  const overlay = pathname === '/'
+  // Каждая страница начинается с тёмного блока (первый экран или PageHero),
+  // поэтому шапка вверху прозрачная везде, а не только на главной.
+  const light = scrolled || open || mega !== null
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -110,7 +112,6 @@ export function Header() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const light = scrolled || !overlay || open || mega !== null
   const activeItem = NAV.find((item) => item.label === mega)
 
   return (

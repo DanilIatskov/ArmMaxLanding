@@ -60,15 +60,20 @@ export function SystemTabs() {
                     id={`system-tab-${i}`}
                     aria-selected={selected}
                     aria-controls="system-panel"
-                    onClick={() => setActive(i)}
-                    className={`flex items-start gap-3 border-b py-4 text-left text-[15px] leading-snug transition-colors ${
-                      selected
-                        ? 'border-brand-500 font-bold text-ink-900'
-                        : 'border-line text-body hover:text-ink-900'
+                    onClick={() => go(i)}
+                    // Отрицательные поля выпускают тёмную заливку за колонку,
+                    // чтобы текст остался на вертикали заголовка секции.
+                    className={`group -mx-5 flex border-b px-5 py-6 text-left transition-colors ${
+                      selected ? 'border-ink-invert bg-ink-invert' : 'invert-hover border-line'
                     }`}
                   >
-                    <Marker tone={selected ? 'accent' : 'muted'} className="mt-1" />
-                    {item.title}
+                    <span
+                      className={`text-[17px] leading-snug transition-colors lg:text-[19px] ${
+                        selected ? 'font-bold text-white' : 'text-body group-hover:text-white'
+                      }`}
+                    >
+                      {item.title}
+                    </span>
                   </button>
                 )
               })}
@@ -94,7 +99,7 @@ export function SystemTabs() {
                 <p className="eyebrow text-brand-500">
                   Этап {String(active + 1).padStart(2, '0')}
                 </p>
-                <h3 className="mt-4 text-2xl leading-snug">{service.title}</h3>
+                <h3 className="mt-4 text-[clamp(1.5rem,2.2vw,2rem)] leading-[1.15]">{service.title}</h3>
                 <p className="mt-5 text-[15px] leading-relaxed">{service.short}</p>
 
                 <ul className="mt-7 space-y-2.5">
@@ -180,13 +185,11 @@ function StepTile({
       {/* Перелистывание в паре с номером: он слева внизу, стрелки справа. */}
       <div className="absolute right-5 bottom-5 flex gap-2.5">
         <ArrowButton
-          tone="dark"
           direction="prev"
           label="Предыдущий этап"
           onClick={() => onGo(index - 1)}
         />
         <ArrowButton
-          tone="dark"
           direction="next"
           label="Следующий этап"
           onClick={() => onGo(index + 1)}

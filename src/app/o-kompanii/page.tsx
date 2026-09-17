@@ -64,7 +64,7 @@ export default function AboutPage() {
 
         <ul className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {awards.map((award) => (
-            <li key={award.id} className="overflow-hidden rounded-card bg-surface shadow-card">
+            <li key={award.id} className="invert-hover overflow-hidden rounded-card bg-surface shadow-card">
               <div className="relative aspect-[3/4] bg-surface-sunken">
                 <Image
                   src={award.image}

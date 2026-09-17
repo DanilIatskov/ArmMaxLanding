@@ -95,7 +95,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
             <li key={other.slug} className="bg-surface">
               <Link
                 href={`/uslugi/${other.slug}`}
-                className="group block h-full p-8 transition-colors hover:bg-surface-muted"
+                className="invert-hover group block h-full p-8"
               >
                 <h3 className="text-lg leading-snug transition-colors group-hover:text-brand-500">
                   {other.title}

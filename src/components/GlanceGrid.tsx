@@ -44,7 +44,7 @@ const CELL_DARK = `${CELL_BASE} bg-ink-invert hover:bg-surface`
 const CELLS: Cell[] = [
   // Дефис здесь неразрывный (U+2011): обычный рвал название компании по строкам.
   { kind: 'title', text: 'АРММАКС\u2011СТРОЙ в цифрах', span: 2 },
-  { kind: 'stat', value: '25', unit: 'лет', label: 'в строительстве', dark: true },
+  { kind: 'stat', value: '25', unit: 'лет', label: 'в строительстве' },
   { kind: 'image', src: inzhenerPlanshet, alt: 'Инженер АРММАКС-СТРОЙ с планшетом на площадке объекта капитального строительства' },
 
   { kind: 'stat', value: '300+', unit: 'млн ₽', label: 'объём объекта', dark: true },
@@ -81,9 +81,10 @@ function GlanceCell({ cell, index }: { cell: Cell; index: number }) {
 
   if (cell.kind === 'title') {
     return (
-      <div className={`col-span-2 aspect-[2/1] lg:aspect-auto ${CELL_LIGHT}`}>
+      // Заголовок блока без ховера: он не цифра, выворачивать его не за что.
+      <div className="col-span-2 aspect-[2/1] lg:aspect-auto">
         <Reveal delay={delay} className="flex h-full items-start p-5 md:p-10">
-          <h2 className="font-condensed text-[clamp(2rem,4vw,4rem)] leading-[1.05] font-normal uppercase tracking-[0.01em] transition-colors duration-300 group-hover:text-white">
+          <h2 className="font-condensed text-[clamp(2rem,4vw,4rem)] leading-[1.05] font-normal uppercase tracking-[0.01em]">
             {cell.text}
           </h2>
         </Reveal>

@@ -29,16 +29,18 @@ export default function ServicesPage() {
             <li key={service.slug} className="bg-surface">
               <Link
                 href={`/uslugi/${service.slug}`}
-                className="group grid gap-5 p-8 transition-colors hover:bg-surface-muted md:grid-cols-12 md:gap-10 lg:p-10"
+                className="invert-hover group grid gap-5 p-8 md:grid-cols-12 md:gap-10 lg:p-10"
               >
-                <span className="text-sm font-semibold text-brand-500 md:col-span-1">
+                <span className="text-sm font-semibold text-brand-500 transition-colors group-hover:text-accent-400 md:col-span-1">
                   {String(i + 1).padStart(2, '0')}
                 </span>
                 <h2 className="text-xl leading-snug transition-colors group-hover:text-brand-500 md:col-span-4">
                   {service.title}
                 </h2>
                 <p className="text-[15px] leading-relaxed md:col-span-6">{service.short}</p>
-                <span className="text-sm font-semibold text-brand-500 md:col-span-1 md:text-right">→</span>
+                <span className="text-sm font-semibold text-brand-500 transition-colors group-hover:text-accent-400 md:col-span-1 md:text-right">
+                  →
+                </span>
               </Link>
             </li>
           ))}

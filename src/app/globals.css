@@ -151,6 +151,13 @@
     transition: background-color 300ms ease;
   }
 
+  /* Цвет потомков тоже переводим плавно: иначе фон растворяется за 300мс,
+     а текст перекрашивается мгновенно. Правило вне :hover — нужно
+     в обе стороны. */
+  .invert-hover :is(h2, h3, h4, p, li, dt, dd, .eyebrow) {
+    transition: color 300ms ease;
+  }
+
   @media (hover: hover) {
     .invert-hover:hover {
       background-color: var(--color-ink-invert);
