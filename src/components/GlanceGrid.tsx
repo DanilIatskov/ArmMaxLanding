@@ -21,17 +21,33 @@ import { Reveal } from './Reveal'
 
 type Cell =
   | { kind: 'title'; text: string; span: 2 }
-  | { kind: 'stat'; value: string; unit?: string; label: string }
+  | { kind: 'stat'; value: string; unit?: string; label: string; dark?: boolean }
   | { kind: 'image'; src: StaticImageData; alt: string }
   | { kind: 'empty' }
+
+/*
+  Инверсия ячеек с текстом. Часть из них тёмные по умолчанию — они разбивают
+  белое поле сетки; на ховере каждая ячейка меняется на противоположную,
+  поэтому приём читается как одно правило, а не как два разных состояния.
+
+  Цвет заливки — токен `ink-invert`, тот же, что у класса `.invert-hover`
+  в globals.css. Здесь свой набор классов, а не общий класс: только тут
+  есть ячейки, тёмные по умолчанию, и акцентные цвета единиц.
+
+  Базовый белый фон ячейке даёт `.hairline-grid > *` из слоя components;
+  утилиты Tailwind лежат слоем выше и перебивают его при той же специфичности.
+*/
+const CELL_BASE = 'group transition-colors duration-300'
+const CELL_LIGHT = `${CELL_BASE} hover:bg-ink-invert`
+const CELL_DARK = `${CELL_BASE} bg-ink-invert hover:bg-surface`
 
 const CELLS: Cell[] = [
   // Дефис здесь неразрывный (U+2011): обычный рвал название компании по строкам.
   { kind: 'title', text: 'АРММАКС\u2011СТРОЙ в цифрах', span: 2 },
-  { kind: 'stat', value: '25', unit: 'лет', label: 'в строительстве' },
+  { kind: 'stat', value: '25', unit: 'лет', label: 'в строительстве', dark: true },
   { kind: 'image', src: inzhenerPlanshet, alt: 'Инженер АРММАКС-СТРОЙ с планшетом на площадке объекта капитального строительства' },
 
-  { kind: 'stat', value: '300+', unit: 'млн ₽', label: 'объём объекта' },
+  { kind: 'stat', value: '300+', unit: 'млн ₽', label: 'объём объекта', dark: true },
   { kind: 'image', src: komandaChertezhi, alt: 'Команда АРММАКС-СТРОЙ разбирает чертежи на строительной площадке' },
   { kind: 'empty' },
   { kind: 'empty' },
@@ -44,7 +60,10 @@ const CELLS: Cell[] = [
 
 export function GlanceGrid() {
   return (
-    <section className="bg-surface-muted py-16 md:py-section">
+    // Снизу отступа нет: дальше идёт «Как мы строим» на том же фоне,
+    // и два вертикальных поля складывались в 240px пустоты. Расстояние
+    // между блоками задаёт верхнее поле следующей секции.
+    <section className="bg-surface-muted pt-16 md:pt-section">
       <div className="mx-auto w-full max-w-[1680px] px-5 lg:px-14">
         <div className="hairline-grid grid-cols-2 border border-line lg:grid-cols-4">
           {CELLS.map((cell, i) => (
@@ -62,9 +81,9 @@ function GlanceCell({ cell, index }: { cell: Cell; index: number }) {
 
   if (cell.kind === 'title') {
     return (
-      <div className="col-span-2 aspect-[2/1] lg:aspect-auto">
+      <div className={`col-span-2 aspect-[2/1] lg:aspect-auto ${CELL_LIGHT}`}>
         <Reveal delay={delay} className="flex h-full items-start p-5 md:p-10">
-          <h2 className="font-condensed text-[clamp(2rem,4vw,4rem)] leading-[1.05] font-normal uppercase tracking-[0.01em]">
+          <h2 className="font-condensed text-[clamp(2rem,4vw,4rem)] leading-[1.05] font-normal uppercase tracking-[0.01em] transition-colors duration-300 group-hover:text-white">
             {cell.text}
           </h2>
         </Reveal>
@@ -73,23 +92,32 @@ function GlanceCell({ cell, index }: { cell: Cell; index: number }) {
   }
 
   if (cell.kind === 'stat') {
+    const dark = cell.dark === true
+
     return (
-      <div className="aspect-square">
+      <div className={`aspect-square ${dark ? CELL_DARK : CELL_LIGHT}`}>
         <Reveal delay={delay} className="flex h-full flex-col justify-between p-5 md:p-10">
           {/* Единица стоит под числом, а не в строку с ним: на крупном кегле
               длинное значение переносило её само и ломало ряд. */}
           <p>
-            <span className="font-condensed block text-[clamp(3.25rem,7.5vw,7rem)] leading-[0.85] font-normal tracking-[-0.02em] text-ink-900">
+            <span
+              className={`font-condensed block text-[clamp(3.25rem,7.5vw,7rem)] leading-[0.85] font-normal tracking-[-0.02em] transition-colors duration-300 ${
+                dark ? 'text-white group-hover:text-ink-900' : 'text-ink-900 group-hover:text-white'
+              }`}>
               <CountUp value={cell.value} />
             </span>
             {cell.unit && (
-              <span className="mt-2 block text-[clamp(1rem,1.5vw,1.5rem)] leading-none font-medium text-brand-500">
+              <span className={`mt-2 block text-[clamp(1rem,1.5vw,1.5rem)] leading-none font-medium transition-colors duration-300 ${
+                  dark ? 'text-accent-400 group-hover:text-brand-500' : 'text-brand-500 group-hover:text-accent-400'
+                }`}>
                 {cell.unit}
               </span>
             )}
           </p>
 
-          <p className="eyebrow flex items-start gap-2 text-body-soft md:gap-3">
+          <p className={`eyebrow flex items-start gap-2 transition-colors duration-300 md:gap-3 ${
+              dark ? 'text-white/70 group-hover:text-body-soft' : 'text-body-soft group-hover:text-white/70'
+            }`}>
             <Marker className="mt-px" />
             <span className="leading-[1.5] tracking-[0.1em] break-words md:tracking-[0.18em]">
               {cell.label}

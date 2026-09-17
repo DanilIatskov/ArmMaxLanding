@@ -10,7 +10,7 @@ import type { BuildObject } from '@/content/objects'
  */
 export function ObjectCard({ object }: { object: BuildObject }) {
   return (
-    <article className="group flex h-full flex-col bg-surface p-7 lg:p-8">
+    <article className="invert-hover group flex h-full flex-col bg-surface p-7 lg:p-8">
       <div className="relative aspect-[4/3] overflow-hidden">
         {object.image ? (
           <Image
@@ -21,7 +21,7 @@ export function ObjectCard({ object }: { object: BuildObject }) {
             className="object-cover"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center bg-surface-sunken">
+          <div className="flex h-full w-full items-center justify-center bg-surface-sunken transition-colors duration-300 group-hover:bg-white/10">
             <span className="eyebrow text-body-soft">Здесь будет фото объекта</span>
           </div>
         )}

@@ -17,13 +17,14 @@ import { SLIDE_DURATION_MS, slides } from '@/content/slides'
  * 10:9525. Внизу вкладки по 278px: полоса прогресса, номер и подпись;
  * неактивные приглушены, активная заполняет полосу за время показа.
  *
- * Автопрокрутка останавливается на наведении и фокусе внутри слайдера,
- * а при `prefers-reduced-motion` не запускается вовсе — иначе экран
- * уезжает из-под человека, который не успел дочитать.
+ * Автопрокрутка идёт непрерывно и на наведение не реагирует. Пауза остаётся
+ * только на фокусе внутри слайдера: иначе у того, кто идёт по кнопкам
+ * с клавиатуры, содержимое уезжает прямо под руками.
+ * При `prefers-reduced-motion` автопрокрутка не запускается вовсе.
  */
 export function Hero() {
   const [active, setActive] = useState(0)
-  const [paused, setPaused] = useState(false)
+  const [focused, setFocused] = useState(false)
   const [autoplay, setAutoplay] = useState(false)
 
   const go = useCallback((next: number) => {
@@ -41,20 +42,18 @@ export function Hero() {
   }, [])
 
   useEffect(() => {
-    if (!autoplay || paused) return
+    if (!autoplay || focused) return
     const timer = setTimeout(() => go(active + 1), SLIDE_DURATION_MS)
     return () => clearTimeout(timer)
-  }, [active, autoplay, paused, go])
+  }, [active, autoplay, focused, go])
 
   const slide = slides[active]
 
   return (
     <section
       className="relative flex min-h-[92svh] flex-col overflow-hidden bg-ink-950"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocusCapture={() => setPaused(true)}
-      onBlurCapture={() => setPaused(false)}
+      onFocusCapture={() => setFocused(true)}
+      onBlurCapture={() => setFocused(false)}
     >
       <HeroBackdrop />
 
@@ -67,7 +66,7 @@ export function Hero() {
 
           {/* key перезапускает подъём на каждом слайде. */}
           <div key={active}>
-            <h1 className="rise font-condensed mt-8 text-[clamp(2rem,4.5vw,4.5rem)] leading-[1.06] font-bold tracking-[-0.007em] text-white uppercase lg:max-w-[min(1150px,72vw)]">
+            <h1 className="rise font-condensed mt-8 text-[clamp(2.75rem,calc(2.25rem_+_2vw),4.5rem)] leading-[1.06] font-bold tracking-[-0.007em] text-white uppercase lg:max-w-[min(1150px,72vw)]">
               {slide.lead}{' '}
               <span className="font-normal">{slide.rest}</span>
             </h1>
@@ -91,19 +90,19 @@ export function Hero() {
         </div>
       </div>
 
-      <SlideNav active={active} paused={paused} autoplay={autoplay} onGo={go} />
+      <SlideNav active={active} focused={focused} autoplay={autoplay} onGo={go} />
     </section>
   )
 }
 
 function SlideNav({
   active,
-  paused,
+  focused,
   autoplay,
   onGo,
 }: {
   active: number
-  paused: boolean
+  focused: boolean
   autoplay: boolean
   onGo: (next: number) => void
 }) {
@@ -131,7 +130,7 @@ function SlideNav({
                       className="slide-progress absolute top-[-2px] left-0 block h-[5px] w-full bg-accent-500"
                       style={{
                         animationDuration: `${SLIDE_DURATION_MS}ms`,
-                        animationPlayState: paused || !autoplay ? 'paused' : 'running',
+                        animationPlayState: focused || !autoplay ? 'paused' : 'running',
                       }}
                     />
                   )}

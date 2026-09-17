@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ArrowButton } from './ArrowButton'
 import { ArrowLink } from './ArrowLink'
 import Image from 'next/image'
@@ -13,10 +13,29 @@ import { services } from '@/content/services'
  */
 export function SystemTabs() {
   const [active, setActive] = useState(0)
+  // Куда листали в прошлый раз: кадры едут в эту сторону.
+  const [direction, setDirection] = useState<'next' | 'prev'>('next')
+  // Уходящий кадр держим в DOM, пока он выезжает из рамки.
+  const [leaving, setLeaving] = useState<number | null>(null)
   const service = services[active]
 
-  // По кругу: с последнего этапа стрелка «вперёд» возвращает на первый.
-  const go = (next: number) => setActive((next + services.length) % services.length)
+  // Направление берём до заворота: go(4 + 1) — это всё ещё «вперёд»,
+  // хотя активным станет нулевой этап.
+  const go = (next: number) => {
+    const target = (next + services.length) % services.length
+    if (target === active) return
+    setDirection(next < active ? 'prev' : 'next')
+    setLeaving(active)
+    setActive(target)
+  }
+
+  // Снимаем уходящий кадр, когда проезд закончился: держать его дольше незачем,
+  // а оставить навсегда — значит копить узлы при каждом переключении.
+  useEffect(() => {
+    if (leaving === null) return
+    const timer = setTimeout(() => setLeaving(null), 700)
+    return () => clearTimeout(timer)
+  }, [leaving, active])
 
   return (
     <section className="bg-surface-muted py-16 md:py-section">
@@ -68,7 +87,7 @@ export function SystemTabs() {
           >
             <div className="grid gap-8 sm:grid-cols-12 sm:gap-10">
               <div className="sm:col-span-5">
-                <StepTile index={active} onGo={go} />
+                <StepTile index={active} leaving={leaving} direction={direction} onGo={go} />
               </div>
 
               <div className="flex flex-col sm:col-span-7">
@@ -100,21 +119,44 @@ export function SystemTabs() {
 }
 
 /** Кадр этапа с номером поверх. */
-function StepTile({ index, onGo }: { index: number; onGo: (next: number) => void }) {
+function StepTile({
+  index,
+  leaving,
+  direction,
+  onGo,
+}: {
+  index: number
+  leaving: number | null
+  direction: 'next' | 'prev'
+  onGo: (next: number) => void
+}) {
   const service = services[index]
 
   // 9:12 — оно же 3:4. Исходники горизонтальные (4:3), так что кадр режется
   // по бокам: в рамку попадает около 56% ширины по центру.
   return (
     <div className="relative aspect-[3/4] overflow-hidden bg-ink-900">
+      {/* Уходящий кадр лежит под входящим и выталкивается за край рамки. */}
+      {leaving !== null && leaving !== index && (
+        <Image
+          key={`out-${services[leaving].slug}`}
+          src={services[leaving].image}
+          alt=""
+          aria-hidden
+          fill
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          className={`object-cover ${direction === 'next' ? 'slide-out-next' : 'slide-out-prev'}`}
+        />
+      )}
+
       <Image
-        // key на слаге перезапускает проявление кадра при смене вкладки.
+        // key на слаге перезапускает проезд при смене вкладки.
         key={service.slug}
         src={service.image}
         alt={service.title}
         fill
         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-        className="rise object-cover"
+        className={`object-cover ${direction === 'next' ? 'slide-in-next' : 'slide-in-prev'}`}
       />
 
       {/* Затемнение снизу: без него номер тонет в светлых кадрах. */}

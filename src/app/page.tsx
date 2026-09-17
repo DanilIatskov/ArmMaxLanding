@@ -34,7 +34,7 @@ export default function HomePage() {
 
         <div className="mt-14 grid gap-px bg-line lg:mt-20 lg:grid-cols-2">
           {advantages.map((item, i) => (
-            <Reveal key={item.title} delay={i * 80} className="bg-surface">
+            <Reveal key={item.title} delay={i * 80} className="invert-hover bg-surface">
               <div className="h-full p-8 lg:p-12">
                 <p className="eyebrow flex items-center gap-3 text-brand-500">
                   <Marker />
@@ -65,7 +65,7 @@ export default function HomePage() {
             накладывались друг на друга. Заодно <div> больше не лежит в <ol>. */}
         <ol className="mt-14 border-b border-line-strong lg:mt-20">
           {stages.map((stage, i) => (
-            <li key={stage.n} className="border-t border-line-strong">
+            <li key={stage.n} className="invert-hover -mx-5 border-t border-line-strong px-5 lg:-mx-14 lg:px-14">
               <Reveal delay={i * 60} className="grid gap-4 py-8 md:grid-cols-12 md:gap-10 md:py-10">
                 <span className="font-condensed text-[clamp(1.75rem,3vw,2.75rem)] leading-none font-light tracking-[-0.02em] text-brand-600 md:col-span-2">
                   {stage.n}
@@ -132,7 +132,7 @@ export default function HomePage() {
 
         <ul className="mt-14 grid gap-px bg-line md:grid-cols-2 lg:mt-20 lg:grid-cols-4">
           {awards.map((award, i) => (
-            <Reveal key={award.id} delay={i * 70} className="bg-surface">
+            <Reveal key={award.id} delay={i * 70} className="invert-hover bg-surface">
               <li className="flex h-full flex-col p-8 lg:p-10">
                 <p className="eyebrow flex items-center gap-3 text-brand-500">
                   <Marker />

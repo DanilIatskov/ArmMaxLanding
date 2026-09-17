@@ -21,6 +21,9 @@
   --color-accent-500: #00adef;
   --color-accent-400: #35c2f5;
 
+  /* Заливка вывернутых блоков: темнее ink-900, повторяет тёмный референса. */
+  --color-ink-invert: #060d2e;
+
   --color-surface: #ffffff;
   --color-surface-muted: #f1f3f8;
   --color-surface-sunken: #e6eaf2;
@@ -93,6 +96,7 @@
 }
 
 @layer components {
+
   /*
     Для блоков во всю ширину: подводит содержимое к той же вертикали,
     по которой выстроены контейнеры, хотя фон доходит до края экрана.
@@ -127,6 +131,43 @@
 
 /* Появление блоков при скролле. Класс снимает <Reveal/>, когда секция видна. */
 @layer utilities {
+  /*
+    Блок, который на наведении выворачивается в тёмное: фон уходит
+    в --color-ink-invert, текст светлеет с сохранением иерархии —
+    заголовок белый, текст приглушённее, надзаголовок ещё тише.
+
+    Правила для потомков лежат здесь, а не в разметке: приём повторяется
+    в пяти блоках, и набор из десятка `group-hover:` в каждом
+    пришлось бы править в пяти местах при любой смене оттенка.
+
+    Слой именно utilities, а не components: на блоках стоит `bg-surface`,
+    и утилита из позднего слоя перебила бы компонентное правило независимо
+    от специфичности.
+
+    Всё внутри @media (hover: hover) — на тач-экранах состояние залипает
+    после тапа, и блок остаётся тёмным без причины.
+  */
+  .invert-hover {
+    transition: background-color 300ms ease;
+  }
+
+  @media (hover: hover) {
+    .invert-hover:hover {
+      background-color: var(--color-ink-invert);
+    }
+
+    .invert-hover:hover :is(h2, h3, h4, dd) {
+      color: #fff;
+    }
+
+    .invert-hover:hover :is(p, li, dt) {
+      color: rgb(255 255 255 / 0.68);
+    }
+
+    .invert-hover:hover .eyebrow {
+      color: rgb(255 255 255 / 0.55);
+    }
+  }
   .reveal {
     opacity: 0;
     transform: translateY(24px);
@@ -146,6 +187,22 @@
   .rise {
     animation: rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
   }
+
+  /* ease-in-out: кадр трогается и останавливается плавно. На easeOut
+     движение заканчивалось за ~100мс и читалось как подмена, а не как проезд. */
+  .slide-in-next,
+  .slide-out-next,
+  .slide-in-prev,
+  .slide-out-prev {
+    animation-duration: 0.65s;
+    animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+    animation-fill-mode: both;
+  }
+
+  .slide-in-next { animation-name: slide-in-next; }
+  .slide-out-next { animation-name: slide-out-next; }
+  .slide-in-prev { animation-name: slide-in-prev; }
+  .slide-out-prev { animation-name: slide-out-prev; }
 
   .slide-progress {
     transform-origin: left;
@@ -167,6 +224,29 @@
   .marquee-host:hover .marquee-track {
     animation-play-state: paused;
   }
+}
+
+/* Проезд кадров этапа: уходящий выталкивается из рамки, входящий занимает
+   его место. Обе половины идут на одной кривой ease-in-out, поэтому читаются
+   как одно движение, а не как две независимые анимации. */
+@keyframes slide-in-next {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes slide-out-next {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+}
+
+@keyframes slide-in-prev {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes slide-out-prev {
+  from { transform: translateX(0); }
+  to { transform: translateX(100%); }
 }
 
 /* Первый экран проявляется подъёмом: заголовок, затем кнопки. */
@@ -220,7 +300,11 @@
     transform: scaleX(1);
   }
 
-  .rise {
+  .rise,
+  .slide-in-next,
+  .slide-out-next,
+  .slide-in-prev,
+  .slide-out-prev {
     animation: none;
   }
 

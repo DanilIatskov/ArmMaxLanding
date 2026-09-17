@@ -93,6 +93,16 @@ export function Header() {
     return () => window.removeEventListener('keydown', onKey)
   }, [])
 
+  // Меню занимает весь экран — страница под ним прокручиваться не должна.
+  useEffect(() => {
+    if (!open) return
+    const previous = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = previous
+    }
+  }, [open])
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
     onScroll()
@@ -106,9 +116,9 @@ export function Header() {
   return (
     <header
       onMouseLeave={() => setMega(null)}
-      className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
+      className={`fixed inset-x-0 top-0 z-50 flex flex-col transition-colors duration-300 ${
         light ? 'bg-surface' : 'bg-transparent'
-      }`}
+      } ${open ? 'h-dvh lg:h-auto' : ''}`}
     >
       <div className="mx-auto w-full max-w-[1680px] px-5 lg:px-14">
         <div className="flex items-center justify-between gap-6 py-4 lg:items-end lg:pt-5 lg:pb-6">
@@ -229,7 +239,7 @@ export function Header() {
       )}
 
       {open && (
-        <div id="mobile-nav" className="max-h-[calc(100dvh-5rem)] overflow-y-auto border-t border-line bg-surface lg:hidden">
+        <div id="mobile-nav" className="flex flex-1 flex-col overflow-y-auto border-t border-line bg-surface lg:hidden">
           <nav className="flex flex-col px-5 py-2">
             {NAV.map((item) => (
               <Link
@@ -257,7 +267,7 @@ export function Header() {
               </Link>
             ))}
           </nav>
-          <div className="px-5 pt-3 pb-8">
+          <div className="mt-auto px-5 pt-10 pb-10">
             <a
               href={contacts.phonePrimary.href}
               onClick={() => setOpen(false)}
