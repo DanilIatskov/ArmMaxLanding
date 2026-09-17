@@ -118,24 +118,28 @@ export function Header() {
     <header
       onMouseLeave={() => setMega(null)}
       className={`fixed inset-x-0 top-0 z-50 flex flex-col transition-colors duration-300 ${
-        light ? 'bg-surface' : 'bg-transparent'
+        light
+          ? 'border-b border-line bg-surface'
+          : 'bg-transparent'
       } ${open ? 'h-dvh lg:h-auto' : ''}`}
     >
       <div className="mx-auto w-full max-w-[1680px] px-5 lg:px-14">
         <div className="flex items-center justify-between gap-6 py-4 lg:items-end lg:pt-5 lg:pb-6">
-          <Link
-            href="/"
-            aria-label="АРММАКС-СТРОЙ — на главную"
-            onClick={() => setMega(null)}
-            className={`shrink-0 transition-opacity hover:opacity-70 ${light ? 'text-ink-900' : 'text-white'}`}
-          >
-            <span className="lg:hidden">
-              <Logo size="sm" />
-            </span>
-            <span className="hidden lg:block">
-              <Logo />
-            </span>
-          </Link>
+          <div className="flex flex-1 justify-start">
+            <Link
+              href="/"
+              aria-label="АРММАКС-СТРОЙ — на главную"
+              onClick={() => setMega(null)}
+              className={`shrink-0 transition-opacity hover:opacity-70 ${light ? 'text-ink-900' : 'text-white'}`}
+            >
+              <span className="lg:hidden">
+                <Logo size="sm" />
+              </span>
+              <span className="hidden lg:block">
+                <Logo />
+              </span>
+            </Link>
+          </div>
 
           <nav className="hidden items-center lg:flex" aria-label="Основная навигация">
             {NAV.map((item) => {
@@ -163,7 +167,7 @@ export function Header() {
             })}
           </nav>
 
-          <div className="hidden items-center gap-6 lg:flex">
+          <div className="hidden flex-1 items-center justify-end gap-6 lg:flex">
             <Link
               href="/kontakty#zayavka"
               onMouseEnter={() => setMega(null)}
@@ -175,10 +179,13 @@ export function Header() {
             >
               Связаться
             </Link>
+            {/* До xl телефон прячем: он не сжимается и выдавливает навигацию
+                из центра. Связаться всё равно есть кнопкой, а номер стоит
+                в подвале и на странице контактов. */}
             <a
               href={contacts.phonePrimary.href}
               onMouseEnter={() => setMega(null)}
-              className={`font-condensed text-[17px] font-bold whitespace-nowrap transition-colors ${
+              className={`font-condensed hidden text-[17px] font-bold whitespace-nowrap transition-colors xl:block ${
                 light ? 'text-ink-900 hover:text-brand-500' : 'text-white hover:text-accent-400'
               }`}
             >
@@ -205,8 +212,11 @@ export function Header() {
         </div>
       </div>
 
+      {/* У панели нет тени: при размытии 8px и сдвиге 2px она вылезала выше
+          самой панели и читалась серой полосой под шапкой. Панель и так отделена
+          границей, а мягкая тень выбивалась из плоской вёрстки с волосяными линиями. */}
       {activeItem?.mega && (
-        <div className="hidden border-t border-line bg-surface shadow-[0_2px_8px_rgba(11,16,40,0.1)] lg:block">
+        <div className="hidden border-t border-line bg-surface lg:block">
           <div className="flex">
             {/* Без max-width: `pl-edge` растёт вместе с шириной окна, и при
                 фиксированном потолке колонки место под текст схлопывалось —
@@ -228,7 +238,7 @@ export function Header() {
 
             <ul className="pr-edge flex-1 py-7 pl-10 xl:pl-16">
               {activeItem.mega.links.map((child) => (
-                <li key={child.href} className="border-b border-line">
+                <li key={child.href} className="border-b border-line last:border-0">
                   <Link
                     href={child.href}
                     onClick={() => setMega(null)}
