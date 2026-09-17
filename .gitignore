@@ -12,3 +12,6 @@ yarn-error.log*
 next-env.d.ts
 .vercel
 *.tsbuildinfo
+
+# Архивы сборок отдаём вручную, в репозитории им делать нечего.
+*.zip
