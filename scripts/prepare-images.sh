@@ -26,16 +26,40 @@ PAIRS=(
   "images/объект-логистический-центр.png|src/assets/objects/logisticheskiy-centr.jpg"
   "images/объект-административный-корпус.png|src/assets/objects/administrativno-bytovoy-korpus.jpg"
   "images/фон-этапы.png|src/assets/etapy-kran.jpg"
+
+  # Кадры к объектам в блоке «Где работала команда». В карточке видна правая
+  # часть, левая уходит под вуаль, поэтому важен не весь кадр, а его правая
+  # половина — при замене смотреть именно на неё.
+  #
+  # Третье поле — предел по ширине. Карточка показывает кадр примерно
+  # на 460 точек, 1100 хватает и на ретину. Без обрезки восемь кадров весят
+  # пять мегабайт, и на превью GitHub Pages они уезжают целиком: там сборка
+  # статическая, оптимизатора картинок нет.
+  "images/объект-арктик-спг.png|src/assets/projects/arctic-spg.jpg|1100"
+  "images/объект-гыдан.png|src/assets/projects/gydan.jpg|1100"
+  "images/объект-музей-транснефть.png|src/assets/projects/muzey-transneft.jpg|1100"
+  "images/объект-омский-нпз.png|src/assets/projects/omskiy-npz.jpg|1100"
+  "images/объект-куюмба-тайшет.png|src/assets/projects/kuyumba-tayshet.jpg|1100"
+  "images/объект-амурский-гпз.png|src/assets/projects/amurskiy-gpz.jpg|1100"
+  "images/объект-оп-свободный.png|src/assets/projects/op-svobodnyy.jpg|1100"
+  "images/объект-сила-сибири.png|src/assets/projects/sila-sibiri-ks7.jpg|1100"
+
+  # Горы в угол секции «Где работала команда» — уходят под фейд, поэтому
+  # важен не сюжет, а общий тон: светлый холодный.
+  "images/горы.png|src/assets/gory.jpg|1600"
 )
 
 for pair in "${PAIRS[@]}"; do
-  src="${pair%%|*}"
-  dst="${pair##*|}"
+  IFS='|' read -r src dst maxwidth <<< "$pair"
   if [ ! -f "$src" ]; then
     echo "пропуск: нет $src"
     continue
   fi
-  sips -s format jpeg -s formatOptions 88 "$src" --out "$dst" >/dev/null
+  if [ -n "${maxwidth:-}" ]; then
+    sips -s format jpeg -s formatOptions 88 -Z "$maxwidth" "$src" --out "$dst" >/dev/null
+  else
+    sips -s format jpeg -s formatOptions 88 "$src" --out "$dst" >/dev/null
+  fi
   printf '%-44s %s\n' "$dst" "$(du -h "$dst" | cut -f1)"
 done
 

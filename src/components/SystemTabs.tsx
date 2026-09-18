@@ -186,12 +186,10 @@ function StepTile({
       {/* Затемнение снизу: без него номер тонет в светлых кадрах. */}
       <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-ink-950/85 via-ink-950/10 to-transparent" />
 
-      {/* Счётчик этапов: надпись, крупный номер и общее количество.
-          Видно не только где ты сейчас, но и сколько всего осталось. */}
+      {/* Счётчик: крупный номер и общее количество. Слова «Этап» тут нет —
+          оно уже стоит над описанием справа, а на кадре оно только повторялось. */}
       <div className="absolute bottom-5 left-5 text-white">
-        <p className="eyebrow text-white/75">Этап</p>
-
-        <p className="mt-1 flex items-baseline gap-2.5">
+        <p className="flex items-baseline gap-2.5">
           <span className="font-condensed text-[clamp(2.75rem,5.5vw,3.75rem)] leading-none font-bold">
             {String(index + 1).padStart(2, '0')}
           </span>

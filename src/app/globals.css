@@ -42,6 +42,9 @@
   --spacing-section: 7.5rem;
 
   --shadow-card: 0 1px 2px rgb(11 16 40 / 0.04), 0 8px 24px -12px rgb(11 16 40 / 0.14);
+  /* Для плашек поверх страницы: шире и мягче карточной, чтобы отделять
+     от любого фона — и от светлой секции, и от снимка на первом экране. */
+  --shadow-float: 0 2px 6px rgb(11 16 40 / 0.06), 0 24px 60px -20px rgb(11 16 40 / 0.28);
 }
 
 @layer base {
@@ -211,6 +214,16 @@
   .slide-in-prev { animation-name: slide-in-prev; }
   .slide-out-prev { animation-name: slide-out-prev; }
 
+  .marquee-track {
+    animation: marquee 32s linear infinite;
+  }
+
+  @media (hover: hover) {
+    .marquee:hover .marquee-track {
+      animation-play-state: paused;
+    }
+  }
+
   .slide-progress {
     transform-origin: left;
     animation: slide-progress linear forwards;
@@ -275,6 +288,14 @@
 }
 
 /* Полоса прогресса активного слайда: заполняется за время показа. */
+/* Бегущая лента: вторая копия списка едет следом, и на -50% кадр совпадает
+   с началом — шва не видно. Ширина копии должна быть одинаковой, поэтому
+   список дублируется целиком, а не по одному элементу. */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
 @keyframes slide-progress {
   from { transform: scaleX(0); }
   to { transform: scaleX(1); }
@@ -288,6 +309,10 @@
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  .marquee-track {
+    animation: none;
   }
 
   .reveal {

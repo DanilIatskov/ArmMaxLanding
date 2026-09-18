@@ -59,7 +59,7 @@ const NAV: NavItem[] = [
     label: 'О компании',
     mega: {
       title: 'О компании',
-      text: 'ООО «АРММАКС-СТРОЙ», Новосибирск. Объекты капитального строительства от 300 млн ₽ по Сибирскому федеральному округу.',
+      text: 'ООО «АРММАКС-СТРОЙ», Новосибирск. Объекты капитального строительства от 100 млн ₽ по Сибирскому федеральному округу.',
       cta: { href: '/o-kompanii', label: 'Подробнее' },
       links: [
         { href: '/o-kompanii', label: 'История и принципы' },
@@ -133,10 +133,10 @@ export function Header() {
               className={`shrink-0 transition-opacity hover:opacity-70 ${light ? 'text-ink-900' : 'text-white'}`}
             >
               <span className="lg:hidden">
-                <Logo size="sm" surface={light ? 'light' : 'dark'} />
+                <Logo size="sm" />
               </span>
               <span className="hidden lg:block">
-                <Logo surface={light ? 'light' : 'dark'} />
+                <Logo />
               </span>
             </Link>
           </div>

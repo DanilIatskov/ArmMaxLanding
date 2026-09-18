@@ -1,4 +1,5 @@
 import Image, { type StaticImageData } from 'next/image'
+import Link from 'next/link'
 import inzhenerPlanshet from '@/assets/inzhener-planshet.jpg'
 import kaska from '@/assets/kaska.jpg'
 import komandaChertezhi from '@/assets/komanda-chertezhi.jpg'
@@ -21,7 +22,7 @@ import { Reveal } from './Reveal'
 
 type Cell =
   | { kind: 'title'; text: string; span: 2 }
-  | { kind: 'stat'; value: string; unit?: string; label: string; dark?: boolean }
+  | { kind: 'stat'; value: string; unit?: string; label: string; dark?: boolean; href?: string }
   | { kind: 'image'; src: StaticImageData; alt: string }
   | { kind: 'empty' }
 
@@ -44,17 +45,17 @@ const CELL_DARK = `${CELL_BASE} bg-ink-invert hover:bg-surface`
 const CELLS: Cell[] = [
   // Дефис здесь неразрывный (U+2011): обычный рвал название компании по строкам.
   { kind: 'title', text: 'АРММАКС\u2011СТРОЙ в цифрах', span: 2 },
-  { kind: 'stat', value: '25', unit: 'лет', label: 'в строительстве' },
+  { kind: 'stat', value: '25', unit: 'лет', label: 'в строительстве', href: '/o-kompanii' },
   { kind: 'image', src: inzhenerPlanshet, alt: 'Инженер АРММАКС-СТРОЙ с планшетом на площадке объекта капитального строительства' },
 
-  { kind: 'stat', value: '300+', unit: 'млн ₽', label: 'объём объекта', dark: true },
+  { kind: 'stat', value: '100+', unit: 'млн ₽', label: 'объём объекта', dark: true, href: '#zayavka' },
   { kind: 'image', src: komandaChertezhi, alt: 'Команда АРММАКС-СТРОЙ разбирает чертежи на строительной площадке' },
   { kind: 'empty' },
   { kind: 'empty' },
 
   { kind: 'empty' },
   { kind: 'empty' },
-  { kind: 'stat', value: '4', unit: 'награды', label: 'Минстрой и Госстройнадзор НСО' },
+  { kind: 'stat', value: '4', unit: 'награды', label: 'Минстрой и Госстройнадзор НСО', href: '/o-kompanii#nagrady' },
   { kind: 'image', src: kaska, alt: 'Каска с маркировкой АРММАКС-СТРОЙ' },
 ]
 
@@ -95,8 +96,14 @@ function GlanceCell({ cell, index }: { cell: Cell; index: number }) {
   if (cell.kind === 'stat') {
     const dark = cell.dark === true
 
+    // Ячейка с адресом становится ссылкой целиком: цифра и подпись работают
+    // как одна мишень, а тянуться к мелкому тексту внизу не приходится.
+    const Cell = cell.href ? Link : 'div'
+    const cellProps = cell.href ? { href: cell.href } : {}
+
     return (
       <div className={`aspect-square ${dark ? CELL_DARK : CELL_LIGHT}`}>
+        <Cell {...(cellProps as { href: string })} className="block h-full">
         <Reveal delay={delay} className="flex h-full flex-col justify-between p-5 md:p-10">
           {/* Единица стоит под числом, а не в строку с ним: на крупном кегле
               длинное значение переносило её само и ломало ряд. */}
@@ -125,6 +132,7 @@ function GlanceCell({ cell, index }: { cell: Cell; index: number }) {
             </span>
           </p>
         </Reveal>
+        </Cell>
       </div>
     )
   }

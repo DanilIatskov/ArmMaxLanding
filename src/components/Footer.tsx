@@ -84,9 +84,14 @@ export function Footer() {
           <p>
             © {new Date().getFullYear()} {requisites.legalName}
           </p>
-          <Link href="/politika-konfidencialnosti" className="transition-colors hover:text-accent-400">
-            Политика обработки персональных данных
-          </Link>
+          <div className="flex flex-col gap-2 md:flex-row md:gap-8">
+            <Link href="/politika-konfidencialnosti" className="transition-colors hover:text-accent-400">
+              Политика обработки персональных данных
+            </Link>
+            <Link href="/politika-cookie" className="transition-colors hover:text-accent-400">
+              Политика использования cookie
+            </Link>
+          </div>
         </div>
       </div>
     </footer>

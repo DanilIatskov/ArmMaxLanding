@@ -1,10 +1,13 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import etapyKran from '@/assets/etapy-kran.jpg'
+import gory from '@/assets/gory.jpg'
 import { Hero } from '@/components/Hero'
 import { GlanceGrid } from '@/components/GlanceGrid'
 import { SystemTabs } from '@/components/SystemTabs'
 import { SectorsGrid } from '@/components/SectorsGrid'
+import { ProjectsAccordion } from '@/components/ProjectsAccordion'
+import { ClientsMarquee } from '@/components/ClientsMarquee'
 import { LeadForm } from '@/components/LeadForm'
 import { ArrowLink } from '@/components/ArrowLink'
 import { Marker } from '@/components/Marker'
@@ -47,6 +50,37 @@ export default function HomePage() {
               </div>
             </Reveal>
           ))}
+        </div>
+      </Section>
+
+      <Section tone="muted" className="overflow-hidden">
+        {/* Горы уходят в правый верхний угол и растворяются влево и вниз.
+            Место справа от заголовка всё равно пустовало, а холодный светлый
+            пейзаж задаёт секции тон до того, как человек дойдёт до снимков. */}
+        <div className="relative">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute top-[-140px] right-[calc(50%-50vw)] bottom-[-60px] hidden w-[62vw] lg:block"
+          >
+            <Image src={gory} alt="" fill sizes="62vw" className="object-cover object-right-top" />
+            <div className="absolute inset-0 bg-gradient-to-r from-surface-muted from-8% via-surface-muted/55 via-45% to-transparent to-85%" />
+            <div className="absolute inset-x-0 bottom-0 h-3/5 bg-gradient-to-t from-surface-muted to-transparent" />
+          </div>
+
+          <Reveal className="relative">
+            <SectionHeading
+              eyebrow="Наши объекты"
+              title="Где работала команда"
+              lead="Промышленные и инфраструктурные объекты федерального масштаба. Работы велись в составе ГК «Армакс» — той же командой, что сегодня работает в АРММАКС-СТРОЙ."
+            />
+          </Reveal>
+        </div>
+        <ProjectsAccordion formHref="#zayavka" />
+        {/* Лента заказчиков идёт справа от ссылки: место там всё равно
+            пустовало, а перечень имён подкрепляет список объектов. */}
+        <div className="mt-12 flex flex-col gap-6 sm:flex-row sm:items-center sm:gap-10">
+          <ArrowLink href="/obekty">Все объекты и заказчики</ArrowLink>
+          <ClientsMarquee />
         </div>
       </Section>
 

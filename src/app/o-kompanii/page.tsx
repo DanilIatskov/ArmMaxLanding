@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import { PageHero } from '@/components/PageHero'
 import { ButtonLink, Pending, Section } from '@/components/ui'
 import { BreadcrumbsJsonLd } from '@/components/JsonLd'
-import { advantages, awards, permits } from '@/content/company'
+import { advantages, awards, leadership, permits } from '@/content/company'
 
 export const metadata: Metadata = {
   // absolute: имя компании уже в заголовке, шаблон дописал бы его второй раз
@@ -31,7 +31,7 @@ export default function AboutPage() {
             <div className="mt-10 space-y-6 text-lg leading-relaxed">
               <p>
                 Начинали с подрядных работ. За 25 лет собрали у себя весь цикл: сегодня берём
-                объекты капитального строительства от 300 млн рублей и ведём их сами — участок,
+                объекты капитального строительства от 100 млн рублей и ведём их сами — участок,
                 технические условия, проект, стройка, ввод в эксплуатацию.
               </p>
               <p>
@@ -85,6 +85,18 @@ export default function AboutPage() {
       </Section>
 
       <Section>
+        <h2 className="rule-accent text-2xl">Руководство</h2>
+        <dl className="mt-10 max-w-2xl space-y-6 border-t border-line pt-8">
+          {leadership.map((person) => (
+            <div key={person.role} className="grid gap-2 sm:grid-cols-2">
+              <dt className="text-sm text-body-soft">{person.role}</dt>
+              <dd>{person.name ?? <Pending what={`Фамилия — ${person.shortName}`} />}</dd>
+            </div>
+          ))}
+        </dl>
+      </Section>
+
+      <Section>
         <h2 className="rule-accent text-2xl">Допуски и членство в СРО</h2>
         <p className="mt-8 max-w-2xl text-[15px] leading-relaxed">
           Членство в саморегулируемой организации проверяют перед тем, как заключить договор
@@ -94,10 +106,6 @@ export default function AboutPage() {
           <div className="grid gap-2 sm:grid-cols-2">
             <dt className="text-sm text-body-soft">СРО на строительство</dt>
             <dd>{permits.sroConstruction ?? <Pending what="Номер и выписка" />}</dd>
-          </div>
-          <div className="grid gap-2 sm:grid-cols-2">
-            <dt className="text-sm text-body-soft">СРО на проектирование</dt>
-            <dd>{permits.sroDesign ?? <Pending what="Номер и выписка" />}</dd>
           </div>
         </dl>
 

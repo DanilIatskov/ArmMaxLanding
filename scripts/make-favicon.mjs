@@ -3,13 +3,13 @@
  * → src/app/icon.png (256×256) и src/app/apple-icon.png (180×180).
  *
  * Берётся только знак «М», без надписи: на вкладке 16×16 от слова остаётся
- * серая полоска. Знак кадрируется по своему габариту с полями в 10% —
- * в исходнике вокруг него пустое место под надпись, и без обрезки знак
- * ужался бы до нескольких пикселей.
+ * серая полоска. Знак белый на тёмном квадрате — том же цвете, что
+ * у viewport.themeColor.
  *
- * Знак берётся фирменный, с градиентами, и кладётся на тёмный квадрат —
- * тот же цвет, что у themeColor сайта. На светлом фоне эти градиенты
- * почти сливались бы с ним, а на тёмном знак читается как в оригинале.
+ * Знак кадрируется по своему габариту с полями в 12%: в общем файле вокруг
+ * него пустое место под надпись, и без обрезки он ужался бы до нескольких
+ * пикселей. Габарит меряется браузером — у контуров есть кривые и своя
+ * трансформация, по числам это не восстановить.
  *
  * ImageMagick и PIL в проекте нет, поэтому рисует headless Chrome.
  *
@@ -17,40 +17,40 @@
  */
 import fs from 'node:fs'
 import path from 'node:path'
-import { readLogo, bounds, withChrome } from './logo-source.mjs'
+import { readLogo, measureGroup, withChrome } from './logo-source.mjs'
 
 /** Тот же тёмный, что в viewport.themeColor. */
 const BACKDROP = '#0b1028'
-const PAD = 0.1
+const PAD = 0.12
 
-const { mark, markElements, defs, root } = readLogo()
-const box = bounds(mark)
+const { mark, root } = readLogo()
+const box = await measureGroup(9390, 'mark')
 
 // Квадрат по большей стороне: иначе знак растянет.
 const side = Math.max(box.width, box.height)
-const pad = side * PAD
-const size = side + pad * 2
+const size = side * (1 + PAD * 2)
 const viewBox = [
-  box.minX - (size - box.width) / 2,
-  box.minY - (size - box.height) / 2,
+  box.x - (size - box.width) / 2,
+  box.y - (size - box.height) / 2,
   size,
   size,
 ].join(' ')
 
-const markup = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}" width="512" height="512">
-<rect x="${box.minX - size}" y="${box.minY - size}" width="${size * 3}" height="${size * 3}" fill="${BACKDROP}"/>
-${markElements.join('\n')}
-${defs}
+const draw = (px) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}" width="${px}" height="${px}">
+<rect x="${box.x - size}" y="${box.y - size}" width="${size * 3}" height="${size * 3}" fill="${BACKDROP}"/>
+<g transform="${mark.transform}" fill="#ffffff">
+${mark.paths.map((d) => `<path d="${d}"/>`).join('\n')}
+</g>
 </svg>`
 
-const files = await withChrome(9360, async (send) => {
+const files = await withChrome(9391, async (send) => {
   await send('Page.enable')
-  await send('Runtime.enable')
 
   const render = async (px) => {
     await send('Emulation.setDeviceMetricsOverride', { width: px, height: px, deviceScaleFactor: 1, mobile: false })
-    const page = `<body style="margin:0">${markup.replace('width="512" height="512"', `width="${px}" height="${px}"`)}</body>`
-    await send('Page.navigate', { url: 'data:text/html;charset=utf-8,' + encodeURIComponent(page) })
+    await send('Page.navigate', {
+      url: 'data:text/html;charset=utf-8,' + encodeURIComponent(`<body style="margin:0">${draw(px)}</body>`),
+    })
     await new Promise((r) => setTimeout(r, 600))
     const shot = await send('Page.captureScreenshot', { format: 'png' })
     return Buffer.from(shot.result.data, 'base64')

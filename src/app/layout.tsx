@@ -5,6 +5,7 @@ import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
 import { OrganizationJsonLd } from '@/components/JsonLd'
 import { YandexMetrika } from '@/components/YandexMetrika'
+import { CookieNotice } from '@/components/CookieNotice'
 import { company, requisites, site } from '@/content/company'
 
 // Manrope: плотный гротеск с полной кириллицей. Референсы (suffolk.com,
@@ -117,6 +118,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Footer />
         <OrganizationJsonLd />
         <YandexMetrika />
+        <CookieNotice />
       </body>
     </html>
   )

@@ -1,10 +1,16 @@
 /**
- * Разбор images/logo.svg — общий для сборки фавикона и картинки превью.
+ * Разбор images/logo.svg — общий для вёрстки, фавикона и картинки превью.
  *
- * Логотип лежит одним файлом на восемь контуров: шесть на гранёный знак «М»
- * и два на надпись. Заливки в исходнике — градиенты от белого к серо-синему;
- * и фавикону, и превью нужен один сплошной цвет, поэтому берём только
- * геометрию.
+ * Логотип лежит одним файлом из двух групп: `mark` — гранёный знак «М»,
+ * `word` — надпись АРММАКС / СТРОЙ. По этим группам скрипты его и делят:
+ * фавикону нужен только знак, остальным — всё целиком.
+ *
+ * Делим именно по группам, а не по числу контуров: знак уже менялся, и число
+ * контуров в нём поменялось с шести на четыре. Группа переживёт и следующую
+ * замену.
+ *
+ * Заливка в исходнике условная и везде переопределяется: логотип одноцветный
+ * и красится снаружи.
  */
 import fs from 'node:fs'
 import path from 'node:path'
@@ -12,65 +18,39 @@ import path from 'node:path'
 const ROOT = path.join(import.meta.dirname, '..')
 const SVG = path.join(ROOT, 'images/logo.svg')
 
-const MARK_PATHS = 6
+function group(svg, id) {
+  const m = svg.match(new RegExp(`<g id="${id}"([^>]*)>([\\s\\S]*?)</g>`))
+  if (!m) throw new Error(`В images/logo.svg нет группы "${id}"`)
+  return {
+    transform: m[1].match(/transform="([^"]+)"/)?.[1] ?? '',
+    paths: [...m[2].matchAll(/<path d="([^"]+)"/g)].map((p) => p[1]),
+  }
+}
 
 export function readLogo() {
   const svg = fs.readFileSync(SVG, 'utf8')
   const viewBox = svg.match(/viewBox="([^"]+)"/)?.[1]
-  const paths = [...svg.matchAll(/<path d="([^"]+)" fill="[^"]+"\s*\/>/g)].map((m) => m[1])
-  // Те же контуры целиком, с фирменными заливками, и блок градиентов к ним.
-  const elements = svg.match(/<path d="[^"]+" fill="[^"]+"\s*\/>/g) ?? []
-  const defs = svg.match(/<defs>[\s\S]*<\/defs>/)?.[0] ?? ''
+  if (!viewBox) throw new Error('В images/logo.svg нет viewBox')
 
-  if (!viewBox || paths.length <= MARK_PATHS) {
-    throw new Error(`images/logo.svg разобрать не удалось: контуров ${paths.length}, viewBox ${viewBox}`)
-  }
+  const mark = group(svg, 'mark')
+  const word = group(svg, 'word')
 
   return {
     viewBox,
-    mark: paths.slice(0, MARK_PATHS),
-    word: paths.slice(MARK_PATHS),
+    mark,
+    word,
     root: ROOT,
-    /** Контуры знака с фирменными градиентами и сами градиенты. */
-    markElements: elements.slice(0, MARK_PATHS),
-    defs,
-    /** Исходник целиком, без внешних width/height — для вставки в вёрстку. */
-    inline: (attrs = '') =>
-      svg.replace(/<svg[^>]*>/, `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}" ${attrs}>`),
+    /** Разметка логотипа заданным цветом — для вставки в вёрстку превью. */
+    inline: (attrs = '', color = 'currentColor') =>
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}" fill="${color}" ${attrs}>` +
+      [mark, word]
+        .map((g) => `<g transform="${g.transform}">${g.paths.map((d) => `<path d="${d}"/>`).join('')}</g>`)
+        .join('') +
+      '</svg>',
   }
 }
 
-/** Габарит набора контуров — чтобы кадрировать знак без ручных замеров. */
-export function bounds(paths) {
-  const nums = paths.join(' ').match(/-?\d+(\.\d+)?/g)?.map(Number) ?? []
-  // В этих контурах только прямые: команды M/L/V/H/Z, поэтому числа идут
-  // парами координат, кроме V и H. Разбираем команды, а не поток чисел.
-  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity
-  for (const d of paths) {
-    let x = 0, y = 0
-    for (const [, cmd, args] of d.matchAll(/([MLVHZ])([^MLVHZ]*)/gi)) {
-      const v = args.match(/-?\d+(\.\d+)?/g)?.map(Number) ?? []
-      const upper = cmd.toUpperCase()
-      if (upper === 'M' || upper === 'L') {
-        for (let i = 0; i + 1 < v.length; i += 2) { x = v[i]; y = v[i + 1]; track() }
-      } else if (upper === 'V') {
-        for (const n of v) { y = n; track() }
-      } else if (upper === 'H') {
-        for (const n of v) { x = n; track() }
-      }
-      function track() {
-        if (x < minX) minX = x
-        if (x > maxX) maxX = x
-        if (y < minY) minY = y
-        if (y > maxY) maxY = y
-      }
-    }
-  }
-  if (!nums.length || minX === Infinity) throw new Error('габарит знака посчитать не удалось')
-  return { minX, minY, maxX, maxY, width: maxX - minX, height: maxY - minY }
-}
-
-/** Общий запуск headless Chrome: он нужен обоим скриптам. */
+/** Общий запуск headless Chrome: он нужен и фавикону, и превью. */
 export async function withChrome(port, fn) {
   const { spawn } = await import('node:child_process')
   const chrome = spawn('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', [
@@ -110,4 +90,31 @@ export async function withChrome(port, fn) {
     ws.close()
     chrome.kill()
   }
+}
+
+/**
+ * Габарит группы в координатах всего логотипа.
+ *
+ * Считаем браузером, а не разбором чисел в контурах: у знака есть кривые
+ * и своя трансформация, по числам это не восстановить. getBBox на самой
+ * группе вернул бы размер до трансформации, поэтому спрашиваем родителя.
+ */
+export async function measureGroup(port, which) {
+  const { viewBox, mark, word } = readLogo()
+  const g = which === 'mark' ? mark : word
+  const html = `<body style="margin:0"><svg viewBox="${viewBox}" width="800"><g id="probe">` +
+    `<g transform="${g.transform}">${g.paths.map((d) => `<path d="${d}"/>`).join('')}</g>` +
+    `</g></svg></body>`
+
+  return withChrome(port, async (send) => {
+    await send('Page.enable')
+    await send('Runtime.enable')
+    await send('Page.navigate', { url: 'data:text/html;charset=utf-8,' + encodeURIComponent(html) })
+    await new Promise((r) => setTimeout(r, 800))
+    const res = await send('Runtime.evaluate', {
+      expression: `(()=>{const b=document.getElementById('probe').getBBox();return JSON.stringify({x:b.x,y:b.y,width:b.width,height:b.height})})()`,
+      returnByValue: true,
+    })
+    return JSON.parse(res.result.result.value)
+  })
 }

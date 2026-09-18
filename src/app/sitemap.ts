@@ -17,6 +17,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/rekvizity', priority: 0.6 },
     { path: '/kontakty', priority: 0.8 },
     { path: '/politika-konfidencialnosti', priority: 0.2 },
+    { path: '/politika-cookie', priority: 0.2 },
   ]
 
   return [

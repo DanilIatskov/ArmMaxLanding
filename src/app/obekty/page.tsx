@@ -4,6 +4,9 @@ import { ButtonLink, Section } from '@/components/ui'
 import { BreadcrumbsJsonLd } from '@/components/JsonLd'
 import { ObjectCard } from '@/components/ObjectCard'
 import { objects } from '@/content/objects'
+import { partners } from '@/content/projects'
+import { ProjectsGrid } from '@/components/ProjectsGrid'
+import { SectionHeading } from '@/components/ui'
 
 export const metadata: Metadata = {
   title: 'Объекты: построено и сдано',
@@ -48,6 +51,29 @@ export default function ObjectsPage() {
             </div>
           </div>
         )}
+      </Section>
+
+      <Section tone="muted">
+        <SectionHeading
+          eyebrow="Наши объекты"
+          title="Где работала команда"
+          lead="Промышленные и инфраструктурные объекты федерального масштаба. Работы велись в составе ГК «Армакс» — той же командой, что сегодня работает в АРММАКС-СТРОЙ."
+        />
+        <ProjectsGrid formHref="/kontakty#zayavka" />
+      </Section>
+
+      <Section>
+        <h2 className="rule-accent text-2xl">Заказчики и партнёры</h2>
+        <p className="mt-8 max-w-2xl text-[15px] leading-relaxed">
+          Организации, с которыми компания работала по договорам. Перечень из тендерной анкеты.
+        </p>
+        <ul className="mt-10 grid gap-x-10 gap-y-px border-t border-line sm:grid-cols-2 lg:grid-cols-3">
+          {partners.map((partner) => (
+            <li key={partner.id} className="border-b border-line py-5 text-[15px]">
+              {partner.name}
+            </li>
+          ))}
+        </ul>
       </Section>
 
       <Section tone="muted">

@@ -1,13 +1,24 @@
+'use client'
+
 import Script from 'next/script'
+import { useCookieConsent } from '@/lib/cookie-consent'
 
 /**
- * Яндекс.Метрика. Счётчик подключается только когда в окружении есть номер —
- * на препроде и в разработке статистика не пачкается.
+ * Яндекс.Метрика.
+ *
+ * Два условия, и оба обязательны: в окружении есть номер счётчика,
+ * и человек согласился на аналитические cookie. Без второго условия баннер
+ * был бы бутафорией — кнопка «Принимаю» ни на что бы не влияла, а счётчик
+ * грузился бы всё равно.
+ *
+ * Счётчик подключается только когда номер задан, поэтому на препроде
+ * и в разработке статистика не пачкается.
  */
 export function YandexMetrika() {
   const id = process.env.NEXT_PUBLIC_YANDEX_METRIKA_ID
+  const consent = useCookieConsent()
 
-  if (!id) return null
+  if (!id || consent !== 'accepted') return null
 
   return (
     <>
