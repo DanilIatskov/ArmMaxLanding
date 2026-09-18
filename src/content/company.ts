@@ -1,3 +1,8 @@
+import gramotaMinstroyBahteev from '@/assets/awards/gramota-minstroy-bahteev.jpg'
+import gramotaMinstroyKollektiv from '@/assets/awards/gramota-minstroy-kollektiv.jpg'
+import pismoGosstroynadzorBahteev from '@/assets/awards/pismo-gosstroynadzor-bahteev.jpg'
+import pismoGosstroynadzorKollektiv from '@/assets/awards/pismo-gosstroynadzor-kollektiv.jpg'
+
 /**
  * Все фактические данные компании — здесь.
  * Компоненты не хранят текст: правка контента не должна трогать вёрстку.
@@ -44,7 +49,16 @@ export const advantages = [
   },
 ] as const
 
-/** Награды 2026 года. Сканы — /public/images/awards. */
+/**
+ * Награды 2026 года.
+ *
+ * Сканы импортируются из src/assets, а не лежат в public по прямому адресу.
+ * Причина не в красоте: на превью сайт стоит в подпапке, а `next/image`
+ * в режиме `unoptimized` отдаёт строковый src как есть, без префикса
+ * базового пути, — сканы отдавали 404. При импорте адрес собирает сборщик,
+ * и он верен в любом размещении. Заодно в имя попадает хеш содержимого,
+ * так что подменённый скан не прилетит из кэша браузера.
+ */
 export const awards = [
   {
     id: 'minstroy-team',
@@ -53,7 +67,7 @@ export const awards = [
     recipient: 'Коллектив ООО «АРММАКС-СТРОЙ»',
     year: 2026,
     signedBy: 'Д. Н. Богомолов',
-    image: '/images/awards/gramota-minstroy-kollektiv.jpg',
+    image: gramotaMinstroyKollektiv,
   },
   {
     id: 'gosstroynadzor-team',
@@ -62,7 +76,7 @@ export const awards = [
     recipient: 'Коллектив ООО «АРММАКС-СТРОЙ»',
     year: 2026,
     signedBy: 'Е. В. Спирин',
-    image: '/images/awards/pismo-gosstroynadzor-kollektiv.jpg',
+    image: pismoGosstroynadzorKollektiv,
   },
   {
     id: 'minstroy-bahteev',
@@ -71,7 +85,7 @@ export const awards = [
     recipient: 'Бахтеев Константин Борисович, руководитель проектов',
     year: 2026,
     signedBy: 'Д. Н. Богомолов',
-    image: '/images/awards/gramota-minstroy-bahteev.jpg',
+    image: gramotaMinstroyBahteev,
   },
   {
     id: 'gosstroynadzor-bahteev',
@@ -80,7 +94,7 @@ export const awards = [
     recipient: 'Бахтеев Константин Борисович, руководитель проектов',
     year: 2026,
     signedBy: 'Е. В. Спирин',
-    image: '/images/awards/pismo-gosstroynadzor-bahteev.jpg',
+    image: pismoGosstroynadzorBahteev,
   },
 ] as const
 
