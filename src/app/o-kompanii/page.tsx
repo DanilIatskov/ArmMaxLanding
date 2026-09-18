@@ -90,7 +90,7 @@ export default function AboutPage() {
           {leadership.map((person) => (
             <div key={person.role} className="grid gap-2 sm:grid-cols-2">
               <dt className="text-sm text-body-soft">{person.role}</dt>
-              <dd>{person.name ?? <Pending what={`Фамилия — ${person.shortName}`} />}</dd>
+              <dd>{person.name}</dd>
             </div>
           ))}
         </dl>

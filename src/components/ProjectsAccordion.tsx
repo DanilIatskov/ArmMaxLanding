@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 import { ArrowButton } from './ArrowButton'
+import { FacetTile } from './FacetTile'
 import { Marker } from './Marker'
 import { ButtonLink } from './ui'
 import { projects } from '@/content/projects'
@@ -26,9 +27,16 @@ import { projects } from '@/content/projects'
  * Углы прямые: скругление здесь спорило бы со всей вёрсткой — сетки, плитки
  * и кнопки на сайте квадратные.
  *
- * На узких экранах гармошка не работает: восемь вертикальных полосок
- * на телефоне нечитаемы. Там лента с прокруткой по одной карточке,
- * и край следующей виден — понятно, что список продолжается.
+ * На узких экранах гармошка не работает: вертикальные полоски на телефоне
+ * нечитаемы. Там лента с прокруткой по одной карточке, и край следующей
+ * виден — понятно, что список продолжается.
+ *
+ * Здесь показаны не все объекты, а те, к которым есть кадр. Причина
+ * арифметическая: на полосу в 1312 точек влезает около девяти карточек,
+ * дальше свёрнутая ужимается до 80 точек, и в неё не помещается ни одно
+ * русское слово. Полный список — сеткой на странице «Объекты», ссылка
+ * стоит тут же под гармошкой. Появятся кадры у остальных — они подхватятся
+ * сами, отдельного списка тут нет.
  */
 
 /** Доли flex-grow. Раскрытая держит около трети строки. */
@@ -39,10 +47,13 @@ const GROW_IDLE = 1
 /** Сколько кадр стоит раскрытым, пока листается само. */
 const SLIDE_MS = 6000
 
+/** Объекты с кадром: только они идут в гармошку и в ленту. */
+const shown = projects.filter((project) => project.image !== null)
+
 export function ProjectsAccordion({ formHref }: { formHref: string }) {
   const [active, setActive] = useState(0)
   const [peeked, setPeeked] = useState<number | null>(null)
-  const total = projects.length
+  const total = shown.length
 
   const grow = (i: number) => {
     if (i === active) return GROW_ACTIVE
@@ -75,7 +86,7 @@ export function ProjectsAccordion({ formHref }: { formHref: string }) {
         className="mt-14 hidden gap-2 lg:mt-20 lg:flex lg:h-[560px]"
         onMouseLeave={() => setPeeked(null)}
       >
-        {projects.map((project, i) => {
+        {shown.map((project, i) => {
           const isActive = i === active
           return (
             <article
@@ -84,16 +95,22 @@ export function ProjectsAccordion({ formHref }: { formHref: string }) {
               style={{ flexGrow: grow(i), flexBasis: 0 }}
               className="group relative isolate min-w-0 overflow-hidden bg-ink-950 transition-[flex-grow] duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] motion-reduce:transition-none"
             >
-              <Image
-                src={project.image}
-                alt=""
-                aria-hidden
-                fill
-                sizes="(max-width: 1024px) 50vw, 40vw"
-                className={`-z-10 object-cover transition-transform duration-700 ease-out motion-reduce:transition-none ${
-                  isActive ? 'scale-100' : 'scale-110'
-                }`}
-              />
+              {project.image ? (
+                <Image
+                  src={project.image}
+                  alt=""
+                  aria-hidden
+                  fill
+                  sizes="(max-width: 1024px) 50vw, 40vw"
+                  className={`-z-10 object-cover transition-transform duration-700 ease-out motion-reduce:transition-none ${
+                    isActive ? 'scale-100' : 'scale-110'
+                  }`}
+                />
+              ) : (
+                <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 opacity-25">
+                  <FacetTile seed={i} cells={5} className="h-full w-full" />
+                </div>
+              )}
               {/* Раскрытой нужен градиент слева под текст, свёрнутой — ровная
                   вуаль: у неё текст идёт и сверху, и снизу. */}
               <div
@@ -123,12 +140,18 @@ export function ProjectsAccordion({ formHref }: { formHref: string }) {
                     {project.title}
                   </h3>
 
-                  <p className="mt-8 text-sm text-white/45">Заказчик</p>
-                  <p className="mt-1 text-lg text-white">{project.client}</p>
-
-                  <p className="mt-6 max-w-[42ch] text-[15px] leading-relaxed text-white/70">
-                    {project.description}
-                  </p>
+                  <dl className="mt-8 flex flex-wrap gap-x-12 gap-y-5">
+                    {project.client && (
+                      <div>
+                        <dt className="text-sm text-white/45">Заказчик</dt>
+                        <dd className="mt-1 text-lg text-white">{project.client}</dd>
+                      </div>
+                    )}
+                    <div className="max-w-[32ch]">
+                      <dt className="text-sm text-white/45">Объём работ</dt>
+                      <dd className="mt-1 text-lg leading-snug text-white">{project.scope}</dd>
+                    </div>
+                  </dl>
 
                   <div className="mt-auto pt-8">
                     <ButtonLink href={formHref} variant="ghost">
@@ -156,8 +179,12 @@ export function ProjectsAccordion({ formHref }: { formHref: string }) {
                   </p>
 
                   <div className="mt-auto">
-                    <p className="text-[11px] text-white/45">Заказчик</p>
-                    <p className="mt-1 text-[12px] leading-tight text-white/85">{project.client}</p>
+                    <p className="text-[11px] text-white/45">
+                      {project.client ? 'Заказчик' : 'Работы'}
+                    </p>
+                    <p className="mt-1 text-[12px] leading-tight text-white/85">
+                      {project.client ?? project.scope}
+                    </p>
                     <span
                       aria-hidden
                       className="mt-4 flex h-9 w-9 items-center justify-center border border-white/30 text-white transition-colors duration-300 group-hover:border-white group-hover:bg-white group-hover:text-ink-950"
@@ -266,7 +293,7 @@ function NextUp({ formHref }: { formHref: string }) {
 function MobileRail() {
   const railRef = useRef<HTMLDivElement>(null)
   const [current, setCurrent] = useState(0)
-  const total = projects.length
+  const total = shown.length
 
   useEffect(() => {
     const rail = railRef.current
@@ -297,19 +324,25 @@ function MobileRail() {
         ref={railRef}
         className="-mx-5 flex snap-x snap-mandatory gap-2 overflow-x-auto scroll-pl-5 px-5 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
-        {projects.map((project, i) => (
+        {shown.map((project, i) => (
           <article
             key={project.id}
             className="relative isolate h-[420px] w-[84vw] shrink-0 snap-start overflow-hidden bg-ink-950"
           >
-            <Image
-              src={project.image}
-              alt=""
-              aria-hidden
-              fill
-              sizes="84vw"
-              className="-z-10 object-cover"
-            />
+            {project.image ? (
+              <Image
+                src={project.image}
+                alt=""
+                aria-hidden
+                fill
+                sizes="84vw"
+                className="-z-10 object-cover"
+              />
+            ) : (
+              <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 opacity-25">
+                <FacetTile seed={i} cells={4} className="h-full w-full" />
+              </div>
+            )}
             <div
               aria-hidden
               className="absolute inset-0 -z-10 bg-gradient-to-t from-ink-950 from-10% via-ink-950/70 via-55% to-ink-950/30"
@@ -329,9 +362,14 @@ function MobileRail() {
               <h3 className="mt-auto text-[clamp(1.75rem,7vw,2.25rem)] leading-[1.1] text-white">
                 {project.title}
               </h3>
-              <p className="mt-5 text-xs text-white/45">Заказчик</p>
-              <p className="mt-1 text-[15px] text-white">{project.client}</p>
-              <p className="mt-4 text-[14px] leading-relaxed text-white/70">{project.description}</p>
+              {project.client && (
+                <>
+                  <p className="mt-5 text-xs text-white/45">Заказчик</p>
+                  <p className="mt-1 text-[15px] text-white">{project.client}</p>
+                </>
+              )}
+              <p className="mt-4 text-xs text-white/45">Объём работ</p>
+              <p className="mt-1 text-[15px] leading-snug text-white">{project.scope}</p>
             </div>
           </article>
         ))}

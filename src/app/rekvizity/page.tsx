@@ -15,11 +15,13 @@ export const metadata: Metadata = {
 /** Страница для службы безопасности заказчика: всё в одном месте, без поиска по сайту. */
 export default function RequisitesPage() {
   const rows: { label: string; value: string | null }[] = [
-    { label: 'Полное наименование', value: requisites.legalName },
+    { label: 'Полное наименование', value: requisites.fullLegalName },
+    { label: 'Сокращённое наименование', value: requisites.legalName },
     { label: 'ИНН', value: requisites.inn },
     { label: 'КПП', value: requisites.kpp },
     { label: 'ОГРН', value: requisites.ogrn },
     { label: 'Дата регистрации', value: requisites.registeredAt },
+    { label: 'ОКВЭД', value: requisites.okved },
     { label: 'Юридический адрес', value: requisites.legalAddress },
     { label: 'Фактический адрес', value: requisites.actualAddress },
     { label: 'Директор', value: requisites.director },

@@ -66,11 +66,25 @@ export function SectionHeading({
 type ButtonProps = {
   children: ReactNode
   variant?: 'primary' | 'outline' | 'ghost'
+  size?: 'md' | 'sm'
   className?: string
 }
 
 const buttonBase =
-  'inline-flex items-center justify-center gap-2 px-8 py-4 text-[13px] font-bold tracking-[0.1em] uppercase transition-colors duration-200'
+  'inline-flex items-center justify-center gap-2 font-bold uppercase transition-colors duration-200'
+
+/**
+ * Размер задаётся свойством, а не классом снаружи: в Tailwind порядок классов
+ * в атрибуте ничего не решает, побеждает тот, что идёт позже в собранном
+ * файле. Переданный снаружи `px-5` проигрывал базовому `px-8` молча.
+ *
+ * `sm` повторяет габарит кнопок первого экрана — 36 точек в высоту.
+ * Служебным элементам вроде уведомления о cookie крупнее не нужно.
+ */
+const buttonSizes = {
+  md: 'gap-2 px-8 py-4 text-[13px] tracking-[0.1em]',
+  sm: 'gap-2 h-9 px-4 text-[12px] tracking-[0.06em]',
+}
 
 const buttonVariants = {
   primary: 'bg-brand-500 text-white hover:bg-brand-400',
@@ -82,11 +96,16 @@ export function ButtonLink({
   href,
   children,
   variant = 'primary',
+  size = 'md',
   className = '',
   ...rest
 }: ButtonProps & ComponentProps<typeof Link>) {
   return (
-    <Link href={href} className={`${buttonBase} ${buttonVariants[variant]} ${className}`} {...rest}>
+    <Link
+      href={href}
+      className={`${buttonBase} ${buttonSizes[size]} ${buttonVariants[variant]} ${className}`}
+      {...rest}
+    >
       {children}
     </Link>
   )
@@ -95,11 +114,15 @@ export function ButtonLink({
 export function Button({
   children,
   variant = 'primary',
+  size = 'md',
   className = '',
   ...rest
 }: ButtonProps & ComponentProps<'button'>) {
   return (
-    <button className={`${buttonBase} ${buttonVariants[variant]} ${className}`} {...rest}>
+    <button
+      className={`${buttonBase} ${buttonSizes[size]} ${buttonVariants[variant]} ${className}`}
+      {...rest}
+    >
       {children}
     </button>
   )

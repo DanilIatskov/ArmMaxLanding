@@ -16,11 +16,15 @@ import { useCookieConsent, writeConsent } from '@/lib/cookie-consent'
  * localStorage недоступен, и разметка с баннером разошлась бы с той,
  * что получится после чтения хранилища.
  *
- * Белая плашка с отступами от краёв, а не полоса во всю ширину: так она
- * читается как элемент поверх страницы, а не как часть подвала, и не режет
- * первый экран пополам. Ни рамки, ни тени — форму держат сам отступ
- * и заливка. Рамки нет, форму задаёт мягкая тень: плашка висит над
- * страницей и должна отделяться и от светлой секции, и от снимка.
+ * Строка во всю ширину окна, низкая. Ширина здесь работает на текст:
+ * в узкой карточке пришлось бы отделаться общими словами, а в строке
+ * помещается по делу — что именно за cookie, зачем и что с аналитикой.
+ *
+ * Кнопки мелкие: это служебное сообщение, а не призыв к действию, и
+ * состязаться по весу с кнопками первого экрана ему незачем.
+ *
+ * Рамки нет, форму задаёт мягкая тень — строка висит над страницей
+ * и должна отделяться и от светлой секции, и от снимка на первом экране.
  */
 export function CookieNotice() {
   const consent = useCookieConsent()
@@ -32,34 +36,56 @@ export function CookieNotice() {
   return (
     <div
       role="dialog"
-      aria-label="Файлы cookie"
-      className="pointer-events-none fixed inset-x-0 bottom-0 z-[60] p-4 lg:p-6"
+      aria-labelledby="cookie-notice-title"
+      className="fixed inset-x-0 bottom-0 z-[60] bg-surface shadow-float-up"
     >
-      <div className="pointer-events-auto mx-auto flex w-full max-w-[1680px] flex-col gap-5 bg-surface p-5 shadow-float lg:flex-row lg:items-center lg:gap-10 lg:p-7">
-        {/* Текст короткий намеренно: на телефоне полоса и так съедает низ
-            экрана, а длинное объяснение живёт на странице политики. */}
-        <p className="flex-1 text-[14px] leading-relaxed lg:text-[15px]">
-          Сайт использует cookie: часть нужна для работы, остальные — чтобы считать
-          посещаемость. Подробнее в{' '}
-          <Link href="/politika-cookie" className="text-ink-900 underline underline-offset-4 transition-colors hover:text-brand-500">
-            политике cookie
-          </Link>{' '}
-          и{' '}
-          <Link href="/politika-konfidencialnosti" className="text-ink-900 underline underline-offset-4 transition-colors hover:text-brand-500">
-            политике обработки данных
-          </Link>.
-        </p>
+      <div className="mx-auto flex w-full max-w-[1680px] flex-col gap-4 px-5 py-4 lg:flex-row lg:items-center lg:gap-10 lg:px-14 lg:py-5">
+        <div className="flex-1">
+          <h2 id="cookie-notice-title" className="text-[15px] leading-snug">
+            Про файлы cookie
+          </h2>
+          <p className="mt-1.5 text-[13px] leading-relaxed text-body-soft">
+            Необходимые запоминают ваш выбор в этой строке — без них сайт не работает.
+            Аналитические подключаются только после вашего согласия.
+            {/* Подробности только на широком экране: на телефоне строка от них
+                вырастала вдвое, а место под них есть как раз здесь. */}
+            <span className="hidden lg:inline">
+              {' '}
+              Их ставит Яндекс.Метрика, чтобы считать посещаемость; данные в ней обезличены,
+              и по ним нельзя установить личность. Рекламных cookie на сайте нет.
+            </span>{' '}
+            Подробнее — в{' '}
+            <Link
+              href="/politika-cookie"
+              className="text-ink-900 underline underline-offset-4 transition-colors hover:text-brand-500"
+            >
+              политике cookie
+            </Link>{' '}
+            и{' '}
+            <Link
+              href="/politika-konfidencialnosti"
+              className="text-ink-900 underline underline-offset-4 transition-colors hover:text-brand-500"
+            >
+              политике обработки персональных данных
+            </Link>
+            .
+          </p>
+        </div>
 
-        {/* Кнопки в строку и на телефоне: столбиком полоса вырастала до трети
-            экрана. Отказ таким же по весу, как согласие, — выбор из одной
-            кнопки выбором не является. */}
+        {/* Отказ такой же по весу, как согласие: выбор из одной кнопки
+            выбором не является. */}
         <div className="flex shrink-0 gap-2.5">
-          <Button className="flex-1 px-4 lg:flex-none lg:px-8" onClick={() => choose('accepted')}>
+          <Button
+            size="sm"
+            className="flex-1 whitespace-nowrap lg:flex-none"
+            onClick={() => choose('accepted')}
+          >
             Принимаю
           </Button>
           <Button
             variant="outline"
-            className="flex-1 px-4 lg:flex-none lg:px-8"
+            size="sm"
+            className="flex-1 whitespace-nowrap lg:flex-none"
             onClick={() => choose('declined')}
           >
             Только нужные
