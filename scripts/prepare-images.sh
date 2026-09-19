@@ -13,8 +13,8 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 PAIRS=(
-  "images/фото-инженер.png|src/assets/inzhener-planshet.jpg"
-  "images/фото-команда.png|src/assets/komanda-chertezhi.jpg"
+  "images/фото-геодезист.png|src/assets/geodezist-taheometr.jpg"
+  "images/фото-бригада.png|src/assets/brigada-chertezhi.jpg"
   "images/каска.png|src/assets/kaska.jpg"
   "images/фон-первый-экран.png|src/assets/hero-stroyka.jpg"
   "images/этап-1-техусловия.png|src/assets/stages/tehnicheskie-usloviya.jpg"

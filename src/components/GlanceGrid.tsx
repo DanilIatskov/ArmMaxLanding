@@ -1,8 +1,8 @@
 import Image, { type StaticImageData } from 'next/image'
 import Link from 'next/link'
-import inzhenerPlanshet from '@/assets/inzhener-planshet.jpg'
+import brigadaChertezhi from '@/assets/brigada-chertezhi.jpg'
 import kaska from '@/assets/kaska.jpg'
-import komandaChertezhi from '@/assets/komanda-chertezhi.jpg'
+import geodezistTaheometr from '@/assets/geodezist-taheometr.jpg'
 import { CountUp } from './CountUp'
 import { Marker } from './Marker'
 import { Reveal } from './Reveal'
@@ -46,10 +46,10 @@ const CELLS: Cell[] = [
   // Дефис здесь неразрывный (U+2011): обычный рвал название компании по строкам.
   { kind: 'title', text: 'АРММАКС\u2011СТРОЙ в цифрах', span: 2 },
   { kind: 'stat', value: '25', unit: 'лет', label: 'в строительстве', href: '/o-kompanii' },
-  { kind: 'image', src: inzhenerPlanshet, alt: 'Инженер АРММАКС-СТРОЙ с планшетом на площадке объекта капитального строительства' },
+  { kind: 'image', src: geodezistTaheometr, alt: 'Геодезист АРММАКС-СТРОЙ с тахеометром на зимней площадке' },
 
   { kind: 'stat', value: '100+', unit: 'млн ₽', label: 'объём объекта', dark: true, href: '#zayavka' },
-  { kind: 'image', src: komandaChertezhi, alt: 'Команда АРММАКС-СТРОЙ разбирает чертежи на строительной площадке' },
+  { kind: 'image', src: brigadaChertezhi, alt: 'Бригада АРММАКС-СТРОЙ разбирает чертежи на промышленной площадке' },
   { kind: 'empty' },
   { kind: 'empty' },
 
