@@ -6,6 +6,7 @@ import { Footer } from '@/components/Footer'
 import { OrganizationJsonLd } from '@/components/JsonLd'
 import { YandexMetrika } from '@/components/YandexMetrika'
 import { CookieNotice } from '@/components/CookieNotice'
+import { Splash } from '@/components/Splash'
 import { company, requisites, site } from '@/content/company'
 
 // Manrope: плотный гротеск с полной кириллицей. Референсы (suffolk.com,
@@ -103,7 +104,15 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ru" className={`${manrope.variable} ${condensed.variable}`}>
+    // suppressHydrationWarning — из-за заставки: скрипт в <head> успевает
+    // поставить на <html> атрибут data-splash до гидратации, и React считает
+    // это расхождением с серверной разметкой. Флаг гасит предупреждение
+    // только для атрибутов самого <html>, внутрь дерева он не действует.
+    <html
+      lang="ru"
+      className={`${manrope.variable} ${condensed.variable}`}
+      suppressHydrationWarning
+    >
       <body className="flex min-h-screen flex-col">
         <a
           href="#main"
@@ -119,6 +128,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <OrganizationJsonLd />
         <YandexMetrika />
         <CookieNotice />
+        <Splash />
       </body>
     </html>
   )

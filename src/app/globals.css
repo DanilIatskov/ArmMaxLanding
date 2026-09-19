@@ -233,6 +233,46 @@
 
      Остановки по наведению нет: лента идёт всегда. Нажимать в ней не на что,
      а замирающая под курсором строка читается как поломка. */
+  /* Заставка первого захода. Гаснет сама: анимация с задержкой, затем
+     фиксируется конечный кадр. Discrete-свойства в последнем кадре снимают
+     её из потока событий, чтобы сквозь погасшую заслонку можно было нажимать. */
+  .splash {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-ink-950);
+    animation: splash-out 0.5s ease-out 1.4s both;
+  }
+
+  /* Уже видели в этой сессии — заставки нет вовсе. Решает скрипт в <head>. */
+  [data-splash='off'] .splash {
+    display: none;
+  }
+
+  /* Сборка логотипа: секции знака поднимаются с общей линии основания,
+     слева направо, затем проявляется надпись.
+
+     Приём не декоративный: знак и правда сложен из вертикальных секций
+     разной высоты, стоящих на одной земле, — 195, 231 и 270 единиц. Они
+     растут как силуэт стройки, а последним встаёт сам «М».
+
+     transform-box: fill-box — иначе точка отсчёта была бы в начале координат
+     svg, и секции уезжали бы вбок вместо того, чтобы расти на месте. */
+  .logo-build-mark > * {
+    transform-box: fill-box;
+    transform-origin: bottom;
+    animation: logo-rise 0.62s cubic-bezier(0.22, 1, 0.3, 1) both;
+  }
+
+  .logo-build-word > * {
+    transform-box: fill-box;
+    transform-origin: left center;
+    animation: logo-word-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
   .marquee-track {
     /* Длительность задаёт компонент: она зависит от того, сколько раз набор
        повторён внутри копии, иначе лента поехала бы во столько же раз быстрее. */
@@ -306,6 +346,22 @@
   to { transform: scaleX(1); }
 }
 
+@keyframes splash-out {
+  0% { opacity: 1; }
+  99% { opacity: 0; visibility: visible; }
+  100% { opacity: 0; visibility: hidden; pointer-events: none; }
+}
+
+@keyframes logo-rise {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+
+@keyframes logo-word-in {
+  from { opacity: 0; transform: translateX(-6px); }
+  to { opacity: 1; transform: none; }
+}
+
 @keyframes marquee {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
@@ -318,6 +374,18 @@
 
   .marquee-track {
     animation: none;
+  }
+
+  /* Логотип показывается собранным: анимацию сборки просто нечем заменить,
+     а неподвижный логотип — нормальный логотип. */
+  .logo-build-mark > *,
+  .logo-build-word > * {
+    animation: none;
+  }
+
+  /* Заставка — чистая анимация, без неё смысла в ней нет. */
+  .splash {
+    display: none;
   }
 
   .reveal {

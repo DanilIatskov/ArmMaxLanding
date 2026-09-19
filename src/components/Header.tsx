@@ -132,11 +132,14 @@ export function Header() {
               onClick={() => setMega(null)}
               className={`shrink-0 transition-opacity hover:opacity-70 ${light ? 'text-ink-900' : 'text-white'}`}
             >
+              {/* Сборка играет при открытии страницы. При переходах внутри
+                  сайта шапка не пересоздаётся, поэтому логотип не дёргается
+                  на каждом клике — анимация видна ровно один раз за загрузку. */}
               <span className="lg:hidden">
-                <Logo size="sm" />
+                <Logo size="sm" animated />
               </span>
               <span className="hidden lg:block">
-                <Logo />
+                <Logo animated />
               </span>
             </Link>
           </div>
