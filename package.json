@@ -12,7 +12,8 @@
     "images": "bash scripts/prepare-images.sh",
     "favicon": "node scripts/make-favicon.mjs",
     "og": "node scripts/make-og.mjs",
-    "logo": "node scripts/make-logo.mjs"
+    "logo": "node scripts/make-logo.mjs",
+    "clients": "node scripts/make-client-logos.mjs"
   },
   "dependencies": {
     "next": "^16.3.5",

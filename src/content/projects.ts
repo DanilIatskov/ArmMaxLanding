@@ -9,6 +9,11 @@ import omskiyNpz from '@/assets/projects/omskiy-npz.jpg'
 import opSvobodnyy from '@/assets/projects/op-svobodnyy.jpg'
 import silaSibiriKs7 from '@/assets/projects/sila-sibiri-ks7.jpg'
 
+import kolmar from '@/assets/clients/kolmar.png'
+import magnit from '@/assets/clients/magnit.png'
+import sibelektroterm from '@/assets/clients/sibelektroterm.png'
+import transneftKozmino from '@/assets/clients/transneft-kozmino.png'
+
 /**
  * Объекты, в которых участвовала команда, и заказчики из тендерной анкеты.
  *
@@ -181,21 +186,32 @@ export type Partner = {
   /** Короткое — для бегущей ленты, туда длинное не влезает. */
   short: string
   /**
-   * Знак компании.
+   * Знак компании. `null` — файла нет, в ленте едет название.
    *
-   * Пока null: файлов нет, и без письменного согласия ставить их нельзя —
-   * назвать компанию словом в перечне работ и разместить её товарный знак
-   * юридически разные вещи. Появятся файлы и согласование — кладём их
-   * в src/assets/clients и импортируем сюда, лента подхватит сама.
+   * Знаки чёрные на прозрачном, поэтому работают только на светлом фоне —
+   * лента как раз на нём. Готовит их `npm run clients`: обрезает пустые поля
+   * и приводит к одной высоте.
+   *
+   * У обоих ГОКов знак один: они входят в ГК «Колмар». В перечне это разные
+   * юрлица и остаются двумя строками, а в ленте знак показывается один раз.
+   *
+   * Разрешение на использование знаков — по-прежнему за заказчиком: файл
+   * и право на него разные вещи.
    */
   logo: StaticImageData | null
 }
 
 export const partners: readonly Partner[] = [
-  { id: 'magnit', name: 'ПАО «Магнит»', short: 'Магнит', logo: null },
-  { id: 'sibelektroterm', name: 'АО «СКБ Сибэлектротерм»', short: 'Сибэлектротерм', logo: null },
+  { id: 'magnit', name: 'ПАО «Магнит»', short: 'Магнит', logo: magnit },
+  { id: 'sibelektroterm', name: 'АО «СКБ Сибэлектротерм»', short: 'Сибэлектротерм', logo: sibelektroterm },
+  /** TODO: знака «Триады» заказчик не прислал — в ленте пока название. */
   { id: 'triada', name: 'НПП «Триада»', short: 'Триада', logo: null },
-  { id: 'gok-denisovskiy', name: 'АО «ГОК Денисовский»', short: 'ГОК Денисовский', logo: null },
-  { id: 'gok-inaglinskiy', name: 'АО «ГОК Инаглинский»', short: 'ГОК Инаглинский', logo: null },
-  { id: 'transneft-kozmino', name: 'ООО «Транснефть-порт Козьмино»', short: 'Транснефть-порт Козьмино', logo: null },
+  { id: 'gok-denisovskiy', name: 'АО «ГОК Денисовский»', short: 'ГОК Денисовский', logo: kolmar },
+  { id: 'gok-inaglinskiy', name: 'АО «ГОК Инаглинский»', short: 'ГОК Инаглинский', logo: kolmar },
+  {
+    id: 'transneft-kozmino',
+    name: 'ООО «Транснефть-порт Козьмино»',
+    short: 'Транснефть-порт Козьмино',
+    logo: transneftKozmino,
+  },
 ] as const

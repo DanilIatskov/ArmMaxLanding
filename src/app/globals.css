@@ -206,11 +206,6 @@
     transform: none;
   }
 
-  /* Строка-бегунок: дублированная лента едет влево ровно на свою половину. */
-  .marquee-track {
-    animation: marquee 38s linear infinite;
-  }
-
   .rise {
     animation: rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
   }
@@ -231,14 +226,17 @@
   .slide-in-prev { animation-name: slide-in-prev; }
   .slide-out-prev { animation-name: slide-out-prev; }
 
-  .marquee-track {
-    animation: marquee 32s linear infinite;
-  }
+  /* Бегущая лента. Анимация висит на обёртке, а не на копиях внутри:
+     сдвиг задан в процентах, и на копии он считался бы от её собственной
+     ширины — лента уезжала на половину копии вместо целой и дёргалась
+     на стыке.
 
-  @media (hover: hover) {
-    .marquee:hover .marquee-track {
-      animation-play-state: paused;
-    }
+     Остановки по наведению нет: лента идёт всегда. Нажимать в ней не на что,
+     а замирающая под курсором строка читается как поломка. */
+  .marquee-track {
+    /* Длительность задаёт компонент: она зависит от того, сколько раз набор
+       повторён внутри копии, иначе лента поехала бы во столько же раз быстрее. */
+    animation: marquee 38s linear infinite;
   }
 
   .slide-progress {
@@ -256,11 +254,6 @@
       facet-breathe 7s ease-in-out infinite;
   }
 
-
-
-  .marquee-host:hover .marquee-track {
-    animation-play-state: paused;
-  }
 }
 
 /* Проезд кадров этапа: уходящий выталкивается из рамки, входящий занимает
@@ -308,11 +301,6 @@
 /* Бегущая лента: вторая копия списка едет следом, и на -50% кадр совпадает
    с началом — шва не видно. Ширина копии должна быть одинаковой, поэтому
    список дублируется целиком, а не по одному элементу. */
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-
 @keyframes slide-progress {
   from { transform: scaleX(0); }
   to { transform: scaleX(1); }

@@ -276,7 +276,7 @@ function NextUp({ formHref }: { formHref: string }) {
         </p>
       </div>
 
-      <ButtonLink href={formHref} className="shrink-0 self-start">
+      <ButtonLink href={formHref} size="lg" className="shrink-0 self-start">
         Рассказать о своём
       </ButtonLink>
     </div>

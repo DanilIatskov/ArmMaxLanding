@@ -77,8 +77,10 @@ export default function HomePage() {
         </div>
         <ProjectsAccordion formHref="#zayavka" />
         {/* Лента заказчиков идёт справа от ссылки: место там всё равно
-            пустовало, а перечень имён подкрепляет список объектов. */}
-        <div className="mt-12 flex flex-col gap-6 sm:flex-row sm:items-center sm:gap-10">
+            пустовало, а перечень знаков подкрепляет список объектов.
+            Отбивка крупная — лента отделена и от гармошки, и от подвала
+            секции, иначе читается как приклеенная к предыдущей строке. */}
+        <div className="mt-20 flex flex-col gap-8 border-t border-line pt-10 sm:flex-row sm:items-center sm:gap-12">
           <ArrowLink href="/obekty">Все объекты и заказчики</ArrowLink>
           <ClientsMarquee />
         </div>

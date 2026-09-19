@@ -66,7 +66,7 @@ export function SectionHeading({
 type ButtonProps = {
   children: ReactNode
   variant?: 'primary' | 'outline' | 'ghost'
-  size?: 'md' | 'sm'
+  size?: 'lg' | 'md' | 'sm'
   className?: string
 }
 
@@ -82,6 +82,7 @@ const buttonBase =
  * Служебным элементам вроде уведомления о cookie крупнее не нужно.
  */
 const buttonSizes = {
+  lg: 'gap-3 px-10 py-5 text-[15px] tracking-[0.1em]',
   md: 'gap-2 px-8 py-4 text-[13px] tracking-[0.1em]',
   sm: 'gap-2 h-9 px-4 text-[12px] tracking-[0.06em]',
 }
