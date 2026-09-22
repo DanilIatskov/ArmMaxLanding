@@ -41,6 +41,12 @@ const nextConfig: NextConfig = {
         trailingSlash: true,
       }
     : {
+        /*
+          Боевая сборка — standalone: в образ уходит только server.js, нужные
+          модули и статика, без всего node_modules. Образ выходит в разы легче,
+          а сервер у нас на 2 ГБ памяти, где каждая сотня мегабайт заметна.
+        */
+        output: 'standalone' as const,
         async headers() {
           return [
             {

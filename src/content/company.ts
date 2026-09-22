@@ -197,8 +197,16 @@ export const permits = {
 } as const
 
 export const site = {
-  /** TODO: домен не выкуплен. armaxstroy.ru занят кровельным лендингом. */
-  url: 'https://armmaks-stroy.ru',
+  /**
+   * Боевой домен. От него считаются canonical, sitemap, robots, og:url и
+   * адреса в микроразметке — то есть всё, по чему поисковик решает, где
+   * «настоящая» копия страницы. Пока здесь стоял невыкупленный адрес,
+   * индексация была невозможна в принципе: canonical указывал в никуда.
+   *
+   * Почта компании живёт на этом же домене, но на серверах Рег.ру —
+   * MX- и TXT-записи при переносе сайта не трогаем, иначе встанет почта.
+   */
+  url: 'https://armmax.ltd',
   /** TODO: номер счётчика после подключения Яндекс.Метрики. */
   yandexMetrikaId: null as number | null,
   yandexVerification: null as string | null,

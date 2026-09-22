@@ -1,0 +1,49 @@
+# Боевой запуск на сервере: сайт и Caddy перед ним.
+#
+# Caddy взят вместо nginx ради одного: он сам получает и продлевает
+# сертификат Let's Encrypt. Ручное продление — классическая причина, по
+# которой у небольших компаний сайт однажды встречает клиента красным
+# предупреждением браузера.
+services:
+  site:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    # Порт наружу не публикуется: снаружи ходит только Caddy, сайт доступен
+    # ему по внутренней сети Docker. Открытый 3000 на публичном IP означал бы
+    # сайт без сертификата в обход домена.
+    expose:
+      - '3000'
+    environment:
+      # Куда падают заявки. Значения — в deploy/.env на сервере, в репозиторий
+      # он не попадает.
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+      TELEGRAM_CHAT_IDS: ${TELEGRAM_CHAT_IDS:-}
+    healthcheck:
+      # Свой же адрес: если Next перестал отвечать, Docker перезапустит
+      # контейнер, а не оставит страницу с ошибкой висеть до утра.
+      test: ['CMD', 'node', '-e', "require('http').get('http://127.0.0.1:3000/', r => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on:
+      - site
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      # Сертификаты переживают пересоздание контейнера: иначе каждый выкат
+      # означал бы новый выпуск, а у Let's Encrypt на это лимиты.
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  caddy_data:
+  caddy_config:
