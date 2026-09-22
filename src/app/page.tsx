@@ -12,10 +12,8 @@ import { LeadForm } from '@/components/LeadForm'
 import { ArrowLink } from '@/components/ArrowLink'
 import { Marker } from '@/components/Marker'
 import { Reveal } from '@/components/Reveal'
-import { ObjectCard } from '@/components/ObjectCard'
 import { Container, Section, SectionHeading } from '@/components/ui'
 import { stages } from '@/content/process'
-import { objects } from '@/content/objects'
 import { advantages, awards, contacts } from '@/content/company'
 
 export const metadata: Metadata = {
@@ -154,40 +152,6 @@ export default function HomePage() {
         </div>
       </Section>
 
-      <Section>
-        <Reveal>
-          <SectionHeading
-            eyebrow="Объекты"
-            title="Что построено"
-            lead="Город, тип объекта, объём работ и год."
-          />
-        </Reveal>
-
-        {objects.length > 0 ? (
-          <>
-            <ul className="mt-14 grid gap-px bg-line md:grid-cols-2 lg:mt-20 lg:grid-cols-3">
-              {objects.slice(0, 3).map((object, i) => (
-                <Reveal key={object.slug} delay={i * 80} className="bg-surface">
-                  <li className="h-full">
-                    <ObjectCard object={object} />
-                  </li>
-                </Reveal>
-              ))}
-            </ul>
-          </>
-        ) : (
-          <div className="mt-12 border border-dashed border-line-strong p-10 lg:p-14">
-            <p className="max-w-2xl text-[15px] leading-relaxed">
-              Готовим материалы по объектам. Скоро здесь появятся карточки с городом, годом
-              и объёмом работ.
-            </p>
-          </div>
-        )}
-
-        <div className="mt-12">
-          <ArrowLink href="/obekty">Все объекты</ArrowLink>
-        </div>
-      </Section>
 
       <Section tone="muted">
         <Reveal>
@@ -198,17 +162,44 @@ export default function HomePage() {
           />
         </Reveal>
 
-        <ul className="mt-14 grid gap-px bg-line md:grid-cols-2 lg:mt-20 lg:grid-cols-4">
+        {/*
+          Три колонки, а не четыре. Наград шесть: по четыре в ряд последняя
+          строка обрывалась на двух карточках, и справа оставался пустой
+          прямоугольник в половину ряда. По три — два полных ряда.
+        */}
+        {/*
+          Карточка со сканом, а не одним текстом: награда — документ, и
+          подтверждает её лист с гербом, печатью и подписью. Текстом это
+          выглядит как утверждение, сканом — как доказательство, а сайт
+          открывают ровно затем, чтобы проверить подрядчика.
+
+          Три колонки: наград шесть, по четыре в ряд последняя строка
+          обрывалась на двух карточках с пустым местом справа.
+        */}
+        <ul className="mt-14 grid gap-px bg-line md:grid-cols-2 lg:mt-20 lg:grid-cols-3">
           {awards.map((award, i) => (
-            <Reveal key={award.id} delay={i * 70} className="bg-surface">
-              <li className="invert-hover flex h-full flex-col p-8 lg:p-10">
-                <p className="eyebrow flex items-center gap-3 text-brand-500">
-                  <Marker />
-                  {award.year}
-                </p>
-                <h3 className="mt-6 text-xl leading-snug">{award.title}</h3>
-                <p className="mt-4 flex-1 text-[15px] leading-relaxed">{award.issuer}</p>
-                <p className="mt-5 text-sm text-body-soft">{award.recipient}</p>
+            <Reveal key={award.id} delay={(i % 3) * 70} className="bg-surface">
+              <li className="invert-hover flex h-full flex-col">
+                {/* contain на белом: у листа важны шапка ведомства и подпись,
+                    обрезка по центру срезала бы и то, и другое. */}
+                <div className="relative aspect-[3/4] bg-white">
+                  <Image
+                    src={award.image}
+                    alt={`${award.title}: ${award.issuer}, ${award.recipient}, ${award.year}`}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="object-contain p-4"
+                  />
+                </div>
+                <div className="flex flex-1 flex-col p-8 lg:p-10">
+                  <p className="eyebrow flex items-center gap-3 text-brand-500">
+                    <Marker />
+                    {award.year}
+                  </p>
+                  <h3 className="mt-6 text-xl leading-snug">{award.title}</h3>
+                  <p className="mt-4 flex-1 text-[15px] leading-relaxed">{award.issuer}</p>
+                  <p className="mt-5 text-sm text-body-soft">{award.recipient}</p>
+                </div>
               </li>
             </Reveal>
           ))}

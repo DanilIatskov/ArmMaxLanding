@@ -1,9 +1,7 @@
 import type { Metadata } from 'next'
 import { PageHero } from '@/components/PageHero'
-import { ButtonLink, Section } from '@/components/ui'
+import { Section } from '@/components/ui'
 import { BreadcrumbsJsonLd } from '@/components/JsonLd'
-import { ObjectCard } from '@/components/ObjectCard'
-import { objects } from '@/content/objects'
 import { partners } from '@/content/projects'
 import { ProjectsGrid } from '@/components/ProjectsGrid'
 import { SectionHeading } from '@/components/ui'
@@ -11,7 +9,7 @@ import { SectionHeading } from '@/components/ui'
 export const metadata: Metadata = {
   title: 'Объекты: построено и сдано',
   description:
-    'Объекты капитального строительства, реализованные АРММАКС-СТРОЙ в Новосибирске и Сибирском федеральном округе: тип объекта, город, объём работ и год.',
+    'Объекты, в которых участвовала команда АРММАКС-СТРОЙ: Амурский ГПЗ, Омский НПЗ, «Сила Сибири», Арктик СПГ, космодром «Восточный». Заказчики, отрасли и объём работ.',
   alternates: { canonical: '/obekty' },
 }
 
@@ -22,40 +20,13 @@ export default function ObjectsPage() {
       <PageHero
         eyebrow="Портфолио"
         title="Объекты"
-        lead="Город, тип объекта, объём работ и год."
+        lead="Промышленные и инфраструктурные объекты, в которых участвовала команда. По каждому — заказчик, отрасль и объём работ."
         breadcrumbs={[{ name: 'Объекты', url: '/obekty' }]}
       />
 
-      <Section>
-        {objects.length > 0 ? (
-          <>
-            <ul className="grid gap-px bg-line md:grid-cols-2 lg:grid-cols-3">
-              {objects.map((object) => (
-                <li key={object.slug} className="h-full bg-surface">
-                  <ObjectCard object={object} />
-                </li>
-              ))}
-            </ul>
-          </>
-        ) : (
-          <div className="max-w-2xl border border-dashed border-line-strong p-10">
-            <h2 className="text-xl leading-snug">Раздел готовится</h2>
-            <p className="mt-5 text-[15px] leading-relaxed">
-              Готовим материалы по объектам. Скоро здесь появятся карточки с городом, типом,
-              годом и объёмом работ.
-            </p>
-            <div className="mt-8">
-              <ButtonLink href="/kontakty#zayavka" variant="outline">
-                Связаться
-              </ButtonLink>
-            </div>
-          </div>
-        )}
-      </Section>
-
       <Section tone="muted">
         <SectionHeading
-          eyebrow="Наши объекты"
+          eyebrow="Объекты"
           title="Где работала команда"
           lead="Промышленные и инфраструктурные объекты федерального масштаба. Работы велись в составе ГК «Армакс» — той же командой, что сегодня работает в АРММАКС-СТРОЙ."
         />

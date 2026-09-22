@@ -58,20 +58,24 @@ export default function AboutPage() {
         <h2 className="rule-accent text-2xl">Награды</h2>
         <p className="mt-8 max-w-2xl text-[15px] leading-relaxed">
           2026 год: Министерство строительства Новосибирской области и Инспекция государственного
-          строительного надзора Новосибирской области — коллективу компании и руководителю проектов
-          Константину Борисовичу Бахтееву.
+          строительного надзора Новосибирской области — коллективу компании, директору Станиславу
+          Борисовичу Бахтееву и руководителю проектов Константину Борисовичу Бахтееву.
         </p>
 
-        <ul className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        {/* Три колонки: наград шесть, и по четыре в ряд последняя строка
+            обрывалась на двух карточках с пустым местом справа. */}
+        <ul className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {awards.map((award) => (
             <li key={award.id} className="invert-hover overflow-hidden rounded-card bg-surface shadow-card">
-              <div className="relative aspect-[3/4] bg-surface-sunken">
+              {/* contain, а не cover: у награды важен весь лист с печатью и подписью,
+                  а обрезка по центру срезала бы шапку ведомства и подпись. */}
+              <div className="relative aspect-[3/4] bg-white">
                 <Image
                   src={award.image}
                   alt={`${award.title}: ${award.issuer}, ${award.recipient}, ${award.year}`}
                   fill
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                  className="object-cover"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  className="object-contain p-3"
                 />
               </div>
               <div className="p-6">

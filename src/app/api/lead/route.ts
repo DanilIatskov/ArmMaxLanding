@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { sendLeadToTelegram } from './telegram'
 
 export const runtime = 'nodejs'
 
@@ -41,14 +42,33 @@ export async function POST(request: Request) {
 
   const lead = { name, phone, message, receivedAt: new Date().toISOString() }
 
-  // TODO: доставка заявки. По брифу — на почту и в CRM.
-  // Почта: SMTP российского провайдера (заявки не должны уходить через зарубежный сервис).
-  // CRM: заказчик её внедряет, какую именно — не сказал. Как выяснится, добавить вебхук.
-  // Пока пишем в лог сервера, чтобы ни одна заявка не потерялась молча.
+  /*
+    Лог пишем всегда и первым делом. Доставка может отказать — Telegram лежит,
+    токен отозвали, почта не настроена, — но заявка к этому моменту уже в
+    журнале сервера, и её можно достать руками. Молча потерянная заявка для
+    подрядчика дороже любой ошибки в интерфейсе.
+  */
   console.info('[lead]', JSON.stringify(lead))
 
-  if (!process.env.LEAD_EMAIL_TO) {
-    console.warn('[lead] LEAD_EMAIL_TO не задан — заявка никуда не отправлена, только записана в лог')
+  const telegram = await sendLeadToTelegram(lead)
+
+  if (telegram.total === 0) {
+    console.warn('[lead] Telegram не настроен: нет TELEGRAM_BOT_TOKEN или TELEGRAM_CHAT_IDS')
+  }
+
+  /*
+    Ни один канал не сработал — честно отвечаем ошибкой. Показать «заявка
+    принята», когда её никто не увидит, хуже, чем попросить позвонить:
+    человек уйдёт в уверенности, что с ним свяжутся.
+
+    TODO: почта и CRM по брифу. Почта — SMTP российского провайдера, заявки с
+    персданными не должны уходить за периметр РФ. CRM заказчик ещё выбирает.
+  */
+  if (telegram.total > 0 && telegram.sent === 0) {
+    return NextResponse.json(
+      { error: 'Не получилось отправить заявку. Позвоните нам, пожалуйста: +7 (983) 300-70-07' },
+      { status: 502 },
+    )
   }
 
   return NextResponse.json({ ok: true })
