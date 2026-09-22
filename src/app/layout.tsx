@@ -52,11 +52,11 @@ const siteUrl = process.env.SITE_ORIGIN ? `${process.env.SITE_ORIGIN}${basePath}
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: `${requisites.legalName} — строительство под ключ в Новосибирске`,
+    default: `${company.name} — генподрядчик полного цикла в Сибири`,
     template: `%s — ${company.name}`,
   },
   description:
-    'ООО «АРММАКС-СТРОЙ» — генподряд и строительство объектов капитального строительства в Новосибирске и Сибирском федеральном округе: технические условия, земельный участок, проектирование, общестрой, ввод в эксплуатацию.',
+    'Объекты капитального строительства в Новосибирске и Сибирском федеральном округе — от технических условий до ввода в эксплуатацию. 25 лет работы, шесть наград Минстроя.',
   applicationName: company.name,
   alternates: { canonical: '/' },
   // Картинка превью лежит в public/og-preview-2.jpg и объявлена здесь руками.

@@ -6,7 +6,7 @@ import { BreadcrumbsJsonLd } from '@/components/JsonLd'
 import { services } from '@/content/services'
 
 export const metadata: Metadata = {
-  title: 'Услуги: строительство под ключ в Новосибирске',
+  title: 'Услуги: строительство под ключ в Новосибирске и по СФО',
   description:
     'Полный цикл по объекту капитального строительства: технические условия и точки подключения, земельный участок, проектирование АР/КЖ/КМ/АС, общестрой и инженерия, ввод в эксплуатацию.',
   alternates: { canonical: '/uslugi' },
