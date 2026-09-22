@@ -244,7 +244,7 @@
     align-items: center;
     justify-content: center;
     background-color: var(--color-ink-950);
-    animation: splash-out 0.5s ease-out 1.4s both;
+    animation: splash-out 0.45s ease-out 0.9s both;
   }
 
   /* Уже видели в этой сессии — заставки нет вовсе. Решает скрипт в <head>. */

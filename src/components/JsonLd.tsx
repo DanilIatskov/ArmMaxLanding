@@ -47,6 +47,30 @@ export function OrganizationJsonLd() {
   )
 }
 
+/**
+ * Сайт как объект.
+ *
+ * Организация уже описана выше, но поисковику нужно ещё и «чей это сайт»:
+ * WebSite с ссылкой на ту же организацию склеивает домен, название и юрлицо в
+ * одну сущность. Без него страницы существуют сами по себе, и в карточке
+ * компании Яндекс охотнее показывает данные со сторонних каталогов, чем с
+ * самого сайта.
+ */
+export function WebSiteJsonLd() {
+  const data = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': `${site.url}/#website`,
+    url: site.url,
+    name: requisites.legalName,
+    alternateName: company.name,
+    inLanguage: 'ru-RU',
+    publisher: { '@id': `${site.url}/#organization` },
+  }
+
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />
+}
+
 export function BreadcrumbsJsonLd({ items }: { items: { name: string; url: string }[] }) {
   const data = {
     '@context': 'https://schema.org',

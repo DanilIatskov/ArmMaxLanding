@@ -3,6 +3,7 @@ import Link from 'next/link'
 import brigadaChertezhi from '@/assets/brigada-chertezhi.jpg'
 import kaska from '@/assets/kaska.jpg'
 import geodezistTaheometr from '@/assets/geodezist-taheometr.jpg'
+import { awards } from '@/content/company'
 import { CountUp } from './CountUp'
 import { Marker } from './Marker'
 import { Reveal } from './Reveal'
@@ -19,6 +20,27 @@ import { Reveal } from './Reveal'
  * поэтому после замены снимка адрес меняется и старый кадр не может
  * прилететь из кэша браузера.
  */
+
+/*
+  Число наград берётся из данных: при добавлении скана цифра в сетке меняется
+  сама. Раньше она стояла строкой, и после пополнения раздела наград сайт
+  обещал «4 награды» рядом со списком из шести.
+
+  `as number` обязателен: массив объявлен `as const`, и без приведения
+  TypeScript считает длину литералом 6 — любое сравнение с другим числом он
+  тогда объявляет заведомо ложным и роняет сборку.
+*/
+const AWARDS_COUNT = awards.length as number
+
+/** Склонение по числу: 1 награда, 2 награды, 5 наград. */
+function plural(n: number, one: string, few: string, many: string): string {
+  const mod100 = n % 100
+  if (mod100 >= 11 && mod100 <= 14) return many
+  const mod10 = n % 10
+  if (mod10 === 1) return one
+  if (mod10 >= 2 && mod10 <= 4) return few
+  return many
+}
 
 type Cell =
   | { kind: 'title'; text: string; span: 2 }
@@ -55,7 +77,7 @@ const CELLS: Cell[] = [
 
   { kind: 'empty' },
   { kind: 'empty' },
-  { kind: 'stat', value: '4', unit: 'награды', label: 'Минстрой и Госстройнадзор НСО', href: '/o-kompanii#nagrady' },
+  { kind: 'stat', value: String(AWARDS_COUNT), unit: plural(AWARDS_COUNT, 'награда', 'награды', 'наград'), label: 'Минстрой и Госстройнадзор НСО', href: '/o-kompanii#nagrady' },
   { kind: 'image', src: kaska, alt: 'Каска с маркировкой АРММАКС-СТРОЙ' },
 ]
 
@@ -77,8 +99,16 @@ export function GlanceGrid() {
 }
 
 function GlanceCell({ cell, index }: { cell: Cell; index: number }) {
-  // Ячейки наполняются по очереди слева направо — сетка как будто заполняется.
-  const delay = index * 70
+  /*
+    Ячейки наполняются по очереди слева направо — сетка как будто заполняется.
+
+    Задержка считается от места в ряду, а не от номера в сетке. Раньше было
+    index * 70, и нижний ряд ждал до 700 мс после того, как уже попал в кадр:
+    человек видел пустые клетки и думал, что сайт не догрузился. В ряду четыре
+    ячейки, шаг 60 мс — весь каскад укладывается в 180 мс, эффект читается,
+    ожидание — нет.
+  */
+  const delay = (index % 4) * 60
 
   if (cell.kind === 'title') {
     return (

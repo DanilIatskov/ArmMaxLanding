@@ -3,7 +3,7 @@ import { Manrope, Roboto_Condensed } from 'next/font/google'
 import './globals.css'
 import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
-import { OrganizationJsonLd } from '@/components/JsonLd'
+import { OrganizationJsonLd, WebSiteJsonLd } from '@/components/JsonLd'
 import { YandexMetrika } from '@/components/YandexMetrika'
 import { CookieNotice } from '@/components/CookieNotice'
 import { Splash } from '@/components/Splash'
@@ -126,6 +126,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </main>
         <Footer />
         <OrganizationJsonLd />
+        <WebSiteJsonLd />
         <YandexMetrika />
         <CookieNotice />
         <Splash />
