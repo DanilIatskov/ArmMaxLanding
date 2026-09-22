@@ -20,6 +20,11 @@ services:
       # он не попадает.
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
       TELEGRAM_CHAT_IDS: ${TELEGRAM_CHAT_IDS:-}
+    volumes:
+      # Пережатые картинки Next держит здесь. Без тома кэш умирает вместе с
+      # контейнером, и после каждого выката первый посетитель каждой страницы
+      # снова ждёт, пока сервер пересчитает снимки.
+      - next_cache:/app/.next/cache
     healthcheck:
       # Свой же адрес: если Next перестал отвечать, Docker перезапустит
       # контейнер, а не оставит страницу с ошибкой висеть до утра.
@@ -45,5 +50,6 @@ services:
       - caddy_config:/config
 
 volumes:
+  next_cache:
   caddy_data:
   caddy_config:

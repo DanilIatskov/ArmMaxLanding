@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import heroStroyka from '@/assets/hero-stroyka.jpg'
+import heroStroyka from '@/assets/hero-stroyka.webp'
 import Link from 'next/link'
 import { useCallback, useEffect, useState } from 'react'
 import { ArrowButton } from './ArrowButton'

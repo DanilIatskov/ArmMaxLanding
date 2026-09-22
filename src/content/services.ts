@@ -5,11 +5,11 @@
  */
 
 import type { StaticImageData } from 'next/image'
-import obshchestroy from '@/assets/stages/obshchestroy-i-inzheneriya.jpg'
-import proektirovanie from '@/assets/stages/proektirovanie.jpg'
-import tehnicheskieUsloviya from '@/assets/stages/tehnicheskie-usloviya.jpg'
-import vvod from '@/assets/stages/vvod-v-ekspluataciyu.jpg'
-import zemelnyyUchastok from '@/assets/stages/zemelnyy-uchastok.jpg'
+import obshchestroy from '@/assets/stages/obshchestroy-i-inzheneriya.webp'
+import proektirovanie from '@/assets/stages/proektirovanie.webp'
+import tehnicheskieUsloviya from '@/assets/stages/tehnicheskie-usloviya.webp'
+import vvod from '@/assets/stages/vvod-v-ekspluataciyu.webp'
+import zemelnyyUchastok from '@/assets/stages/zemelnyy-uchastok.webp'
 
 export type Service = {
   slug: string
