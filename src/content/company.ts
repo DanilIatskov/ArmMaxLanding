@@ -1,6 +1,8 @@
-import gramotaMinstroyBahteev from '@/assets/awards/gramota-minstroy-bahteev.jpg'
+import gramotaMinstroyKonstantin from '@/assets/awards/gramota-minstroy-bahteev-konstantin.jpg'
+import gramotaMinstroyStanislav from '@/assets/awards/gramota-minstroy-bahteev-stanislav.jpg'
 import gramotaMinstroyKollektiv from '@/assets/awards/gramota-minstroy-kollektiv.jpg'
-import pismoGosstroynadzorBahteev from '@/assets/awards/pismo-gosstroynadzor-bahteev.jpg'
+import pismoGosstroynadzorKonstantin from '@/assets/awards/pismo-gosstroynadzor-bahteev-konstantin.jpg'
+import pismoGosstroynadzorStanislav from '@/assets/awards/pismo-gosstroynadzor-bahteev-stanislav.jpg'
 import pismoGosstroynadzorKollektiv from '@/assets/awards/pismo-gosstroynadzor-kollektiv.jpg'
 
 /**
@@ -24,7 +26,7 @@ export const company = {
 /** Ключевые цифры первого экрана. Источник — бриф заказчика от 16.09.2026. */
 export const stats = [
   { value: '25', unit: 'лет', label: 'в строительстве' },
-  { value: '4', unit: 'награды', label: 'Минстроя и Госстройнадзора НСО' },
+  { value: '6', unit: 'наград', label: 'Минстроя и Госстройнадзора НСО' },
   { value: 'от 100', unit: 'млн ₽', label: 'объём объектов, с которыми работаем' },
   { value: 'СФО', unit: '', label: 'география работ' },
 ] as const
@@ -79,22 +81,40 @@ export const awards = [
     image: pismoGosstroynadzorKollektiv,
   },
   {
-    id: 'minstroy-bahteev',
+    id: 'minstroy-bahteev-stanislav',
+    title: 'Почётная грамота',
+    issuer: 'Министерство строительства Новосибирской области',
+    recipient: 'Бахтеев Станислав Борисович, директор',
+    year: 2026,
+    signedBy: 'Д. Н. Богомолов',
+    image: gramotaMinstroyStanislav,
+  },
+  {
+    id: 'gosstroynadzor-bahteev-stanislav',
+    title: 'Благодарственное письмо',
+    issuer: 'Инспекция государственного строительного надзора Новосибирской области',
+    recipient: 'Бахтеев Станислав Борисович, директор',
+    year: 2026,
+    signedBy: 'Е. В. Спирин',
+    image: pismoGosstroynadzorStanislav,
+  },
+  {
+    id: 'minstroy-bahteev-konstantin',
     title: 'Почётная грамота',
     issuer: 'Министерство строительства Новосибирской области',
     recipient: 'Бахтеев Константин Борисович, руководитель проектов',
     year: 2026,
     signedBy: 'Д. Н. Богомолов',
-    image: gramotaMinstroyBahteev,
+    image: gramotaMinstroyKonstantin,
   },
   {
-    id: 'gosstroynadzor-bahteev',
+    id: 'gosstroynadzor-bahteev-konstantin',
     title: 'Благодарственное письмо',
     issuer: 'Инспекция государственного строительного надзора Новосибирской области',
     recipient: 'Бахтеев Константин Борисович, руководитель проектов',
     year: 2026,
     signedBy: 'Е. В. Спирин',
-    image: pismoGosstroynadzorBahteev,
+    image: pismoGosstroynadzorKonstantin,
   },
 ] as const
 
