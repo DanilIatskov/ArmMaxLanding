@@ -168,37 +168,41 @@ export default function HomePage() {
           прямоугольник в половину ряда. По три — два полных ряда.
         */}
         {/*
-          Карточка со сканом, а не одним текстом: награда — документ, и
-          подтверждает её лист с гербом, печатью и подписью. Текстом это
-          выглядит как утверждение, сканом — как доказательство, а сайт
-          открывают ровно затем, чтобы проверить подрядчика.
+          На главной награды идут строкой: миниатюра листа слева, суть справа.
 
-          Три колонки: наград шесть, по четыре в ряд последняя строка
-          обрывалась на двух карточках с пустым местом справа.
+          Полноразмерные сканы живут в разделе «О компании» — повторять их
+          здесь во всю карточку значит показать одно и то же дважды, и вторая
+          встреча уже ничего не добавляет. Здесь задача другая: дать понять,
+          что награды настоящие и их шесть, не отнимая у первого экрана
+          половину прокрутки. Миниатюры хватает, чтобы узнать герб и бланк,
+          а подробности — по ссылке под блоком.
+
+          Две колонки: шесть строк делятся поровну, и текст не растягивается
+          на всю ширину экрана, где его неудобно читать.
         */}
-        <ul className="mt-14 grid gap-px bg-line md:grid-cols-2 lg:mt-20 lg:grid-cols-3">
+        <ul className="mt-14 grid gap-px bg-line lg:mt-20 lg:grid-cols-2">
           {awards.map((award, i) => (
-            <Reveal key={award.id} delay={(i % 3) * 70} className="bg-surface">
-              <li className="invert-hover flex h-full flex-col">
-                {/* contain на белом: у листа важны шапка ведомства и подпись,
-                    обрезка по центру срезала бы и то, и другое. */}
-                <div className="relative aspect-[3/4] bg-white">
+            <Reveal key={award.id} delay={(i % 2) * 70} className="bg-surface">
+              <li className="invert-hover flex h-full items-start gap-5 p-6 sm:gap-6 sm:p-8">
+                {/* Лист целиком на белом: в миниатюре узнаётся бланк с гербом,
+                    обрезка по центру оставила бы безликий кусок бумаги. */}
+                <div className="relative aspect-[3/4] w-16 shrink-0 bg-white sm:w-20">
                   <Image
                     src={award.image}
                     alt={`${award.title}: ${award.issuer}, ${award.recipient}, ${award.year}`}
                     fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    className="object-contain p-4"
+                    sizes="80px"
+                    className="object-contain"
                   />
                 </div>
-                <div className="flex flex-1 flex-col p-8 lg:p-10">
+                <div className="min-w-0">
                   <p className="eyebrow flex items-center gap-3 text-brand-500">
                     <Marker />
                     {award.year}
                   </p>
-                  <h3 className="mt-6 text-xl leading-snug">{award.title}</h3>
-                  <p className="mt-4 flex-1 text-[15px] leading-relaxed">{award.issuer}</p>
-                  <p className="mt-5 text-sm text-body-soft">{award.recipient}</p>
+                  <h3 className="mt-3 text-base leading-snug">{award.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed">{award.issuer}</p>
+                  <p className="mt-2 text-sm text-body-soft">{award.recipient}</p>
                 </div>
               </li>
             </Reveal>
