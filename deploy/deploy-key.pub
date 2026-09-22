@@ -1,0 +1,1 @@
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICi4N104niYowweKYOTNI8IfNq9/SCKB6xHbwDlhXm5U deploy@armmax.ltd
