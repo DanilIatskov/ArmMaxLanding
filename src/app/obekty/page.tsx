@@ -4,6 +4,7 @@ import { Section } from '@/components/ui'
 import { BreadcrumbsJsonLd } from '@/components/JsonLd'
 import { partners } from '@/content/projects'
 import { ProjectsGrid } from '@/components/ProjectsGrid'
+import { ObjectsMap } from '@/components/ObjectsMap'
 import { SectionHeading } from '@/components/ui'
 
 export const metadata: Metadata = {
@@ -50,12 +51,10 @@ export default function ObjectsPage() {
       <Section tone="muted">
         <h2 className="rule-accent text-2xl">География работ</h2>
         <p className="mt-8 max-w-2xl text-[15px] leading-relaxed">
-          Работаем по Сибирскому федеральному округу. Здесь появится карта с метками объектов.
+          Офис в Новосибирске, объекты — по стране: от Гыданского полуострова до Амурской
+          области. На карте отмечены площадки, в которых участвовала команда.
         </p>
-        <div
-          aria-hidden
-          className="mt-10 aspect-[21/9] w-full rounded-card border border-dashed border-line-strong bg-surface"
-        />
+        <ObjectsMap />
       </Section>
     </>
   )

@@ -7,6 +7,7 @@ type Lead = {
   name?: unknown
   phone?: unknown
   message?: unknown
+  page?: unknown
   consent?: unknown
   company_website?: unknown
 }
@@ -30,6 +31,7 @@ export async function POST(request: Request) {
   const name = str(body.name, 120)
   const phone = str(body.phone, 30)
   const message = str(body.message, 2000)
+  const page = str(body.page, 200)
 
   if (!name || !phone) {
     return NextResponse.json({ error: 'Заполните имя и телефон' }, { status: 400 })
@@ -40,7 +42,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Нужно согласие на обработку персональных данных' }, { status: 400 })
   }
 
-  const lead = { name, phone, message, receivedAt: new Date().toISOString() }
+  const lead = { name, phone, message, page, receivedAt: new Date().toISOString() }
 
   /*
     Лог пишем всегда и первым делом. Доставка может отказать — Telegram лежит,

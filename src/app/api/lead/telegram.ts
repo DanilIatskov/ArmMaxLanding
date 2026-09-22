@@ -20,6 +20,8 @@ export type Lead = {
   name: string
   phone: string
   message: string
+  /** С какой страницы отправлена — контекст для первого звонка. */
+  page?: string
   receivedAt: string
 }
 
@@ -49,16 +51,28 @@ function format(lead: Lead): string {
     timeStyle: 'short',
   })
 
+  /*
+    Порядок строк — порядок действий. Заявку открывают, чтобы перезвонить,
+    поэтому сверху имя и номер, а не заголовки полей: подписи «Имя» и
+    «Телефон» занимают строку и ничего не объясняют — и так видно, где что.
+
+    Номер моноширинным: в Telegram такой текст копируется одним касанием.
+
+    Время и страница уходят вниз курсивом. Это справка — по ней видно, что
+    человек читал перед звонком, но ради неё уведомление не открывают.
+  */
   const lines = [
-    '<b>Заявка с сайта АРММАКС-СТРОЙ</b>',
+    '<b>Заявка с сайта</b>',
     '',
-    `<b>Имя:</b> ${esc(lead.name)}`,
-    // Телефон отдельной строкой моноширинным: так его удобно скопировать целиком.
-    `<b>Телефон:</b> <code>${esc(lead.phone)}</code>`,
+    `<b>${esc(lead.name)}</b>`,
+    `<code>${esc(lead.phone)}</code>`,
   ]
 
-  if (lead.message) lines.push('', `<b>Сообщение:</b>`, esc(lead.message))
-  lines.push('', `<i>${when}, Новосибирск</i>`)
+  if (lead.message) lines.push('', esc(lead.message))
+
+  const footer = [when]
+  if (lead.page) footer.push(`страница ${esc(lead.page)}`)
+  lines.push('', `<i>${footer.join(' · ')}</i>`)
 
   return lines.join('\n')
 }

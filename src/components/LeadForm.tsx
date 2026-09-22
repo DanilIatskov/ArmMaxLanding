@@ -23,6 +23,9 @@ export function LeadForm({ tone = 'light' }: { tone?: 'light' | 'dark' }) {
     event.preventDefault()
     const form = event.currentTarget
     const data = Object.fromEntries(new FormData(form))
+    // С какой страницы отправлена: в заявке видно, что человек читал перед звонком —
+    // услуги, объекты или контакты. Для первого разговора это готовый контекст.
+    data.page = window.location.pathname
 
     setStatus('sending')
     setError(null)
