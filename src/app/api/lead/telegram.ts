@@ -25,6 +25,19 @@ export type Lead = {
   receivedAt: string
 }
 
+/**
+ * Адрес Telegram Bot API.
+ *
+ * По умолчанию — официальный, но с российских хостингов подсети Telegram
+ * закрыты, и запрос просто виснет до таймаута. На такой случай адрес
+ * подменяется своим прокси (TELEGRAM_API_BASE), который принимает тот же
+ * путь /bot<токен>/sendMessage и передаёт его дальше.
+ */
+function apiBase(): string {
+  const base = (process.env.TELEGRAM_API_BASE ?? '').trim()
+  return (base || 'https://api.telegram.org').replace(/\/+$/, '')
+}
+
 /** Кому шлём. Пусто — значит доставка не настроена, и это видно в логе. */
 function recipients(): string[] {
   return (process.env.TELEGRAM_CHAT_IDS ?? '')
@@ -95,7 +108,7 @@ export async function sendLeadToTelegram(lead: Lead): Promise<{ sent: number; to
   const results = await Promise.all(
     chats.map(async (chat_id) => {
       try {
-        const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+        const res = await fetch(`${apiBase()}/bot${token}/sendMessage`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

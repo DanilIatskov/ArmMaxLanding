@@ -20,6 +20,8 @@ services:
       # он не попадает.
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
       TELEGRAM_CHAT_IDS: ${TELEGRAM_CHAT_IDS:-}
+      # Прокси до Bot API: с площадки в РФ официальный адрес недоступен.
+      TELEGRAM_API_BASE: ${TELEGRAM_API_BASE:-}
     volumes:
       # Пережатые картинки Next держит здесь. Без тома кэш умирает вместе с
       # контейнером, и после каждого выката первый посетитель каждой страницы
