@@ -121,8 +121,7 @@ export const awards = [
 export const contacts = {
   phonePrimary: { display: '+7 (983) 300-70-07', href: 'tel:+79833007007' },
   phoneSecondary: { display: '+7 (383) 311-03-50', href: 'tel:+73833110350' },
-  /** TODO: перевести почту на собственный домен (info@…) — mail.ru на корпоративном сайте читается как минус. */
-  email: 'armaxstroy@mail.ru',
+  email: 'support@armmax.ltd',
   office: 'Новосибирск, ул. Б. Хмельницкого, 33/1, офис 6',
   hours: 'пн–пт, 9:00–18:00',
   /** Координаты офиса для карты и schema.org. TODO: уточнить по 2ГИС. */
