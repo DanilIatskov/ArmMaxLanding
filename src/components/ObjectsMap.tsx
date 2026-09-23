@@ -40,12 +40,7 @@ export function ObjectsMap() {
         />
       ) : (
         <div className="flex aspect-[21/9] w-full flex-col items-start justify-end rounded-card border border-line bg-surface p-8 lg:p-10">
-          <p className="max-w-xl text-[15px] leading-relaxed">
-            Метки объектов — от Гыданского полуострова до Амурской области.
-            Карту показывает Яндекс: она подгружается по кнопке и ставит свои
-            файлы cookie.
-          </p>
-          <div className="mt-6 flex flex-wrap items-center gap-6">
+          <div className="flex flex-wrap items-center gap-6">
             <button
               type="button"
               onClick={() => setShown(true)}

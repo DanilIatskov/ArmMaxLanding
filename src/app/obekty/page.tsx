@@ -36,9 +36,6 @@ export default function ObjectsPage() {
 
       <Section>
         <h2 className="rule-accent text-2xl">Заказчики и партнёры</h2>
-        <p className="mt-8 max-w-2xl text-[15px] leading-relaxed">
-          Организации, с которыми компания работала по договорам. Перечень из тендерной анкеты.
-        </p>
         <ul className="mt-10 grid gap-x-10 gap-y-px border-t border-line sm:grid-cols-2 lg:grid-cols-3">
           {partners.map((partner) => (
             <li key={partner.id} className="border-b border-line py-5 text-[15px]">
