@@ -119,8 +119,7 @@ export const awards = [
 ] as const
 
 export const contacts = {
-  phonePrimary: { display: '+7 (383) 205-25-54', href: 'tel:+73832052554' },
-  phoneSecondary: { display: '+7 (383) 311-03-50', href: 'tel:+73833110350' },
+  phone: { display: '+7 (383) 205-25-54', href: 'tel:+73832052554' },
   email: 'support@armmax.ltd',
   office: 'Новосибирск, ул. Пролетарская, 54',
   hours: 'пн–пт, 9:00–18:00',

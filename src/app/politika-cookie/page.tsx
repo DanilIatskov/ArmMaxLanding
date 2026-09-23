@@ -93,7 +93,7 @@ export default function CookiePolicyPage() {
               >
                 {contacts.email}
               </a>{' '}
-              или звоните {contacts.phonePrimary.display}.
+              или звоните {contacts.phone.display}.
             </p>
           </section>
         </div>

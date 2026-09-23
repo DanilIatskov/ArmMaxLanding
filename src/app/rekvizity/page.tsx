@@ -25,7 +25,7 @@ export default function RequisitesPage() {
     { label: 'Юридический адрес', value: requisites.legalAddress },
     { label: 'Фактический адрес', value: requisites.actualAddress },
     { label: 'Директор', value: requisites.director },
-    { label: 'Телефон', value: contacts.phonePrimary.display },
+    { label: 'Телефон', value: contacts.phone.display },
     { label: 'Электронная почта', value: contacts.email },
   ]
 

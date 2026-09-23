@@ -59,13 +59,8 @@ export function Footer() {
               <h2 className="eyebrow mb-5 text-white/40">Контакты</h2>
               <ul className="space-y-3 text-sm">
                 <li>
-                  <a href={contacts.phonePrimary.href} className="text-lg font-bold text-white">
-                    {contacts.phonePrimary.display}
-                  </a>
-                </li>
-                <li>
-                  <a href={contacts.phoneSecondary.href} className="transition-colors hover:text-accent-400">
-                    {contacts.phoneSecondary.display}
+                  <a href={contacts.phone.href} className="text-lg font-bold text-white">
+                    {contacts.phone.display}
                   </a>
                 </li>
                 <li>

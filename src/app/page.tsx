@@ -229,8 +229,8 @@ export default function HomePage() {
                 <div>
                   <dt className="eyebrow text-white/40">Телефон</dt>
                   <dd className="mt-3">
-                    <a href={contacts.phonePrimary.href} className="text-2xl font-extrabold tracking-tight text-white">
-                      {contacts.phonePrimary.display}
+                    <a href={contacts.phone.href} className="text-2xl font-extrabold tracking-tight text-white">
+                      {contacts.phone.display}
                     </a>
                   </dd>
                 </div>

@@ -17,7 +17,7 @@ export function OrganizationJsonLd() {
     alternateName: [company.name, company.latinName],
     url: site.url,
     description: company.tagline,
-    telephone: [contacts.phonePrimary.display, contacts.phoneSecondary.display],
+    telephone: contacts.phone.display,
     email: contacts.email,
     address: {
       '@type': 'PostalAddress',

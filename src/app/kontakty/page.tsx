@@ -34,16 +34,10 @@ export default function ContactsPage() {
                 <dt className="text-sm text-body-soft">Телефоны</dt>
                 <dd className="mt-3 space-y-2">
                   <a
-                    href={contacts.phonePrimary.href}
+                    href={contacts.phone.href}
                     className="block text-2xl font-semibold text-ink-900 hover:text-brand-500"
                   >
-                    {contacts.phonePrimary.display}
-                  </a>
-                  <a
-                    href={contacts.phoneSecondary.href}
-                    className="block text-lg text-body hover:text-brand-500"
-                  >
-                    {contacts.phoneSecondary.display}
+                    {contacts.phone.display}
                   </a>
                 </dd>
               </div>

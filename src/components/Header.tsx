@@ -186,13 +186,13 @@ export function Header() {
                 из центра. Связаться всё равно есть кнопкой, а номер стоит
                 в подвале и на странице контактов. */}
             <a
-              href={contacts.phonePrimary.href}
+              href={contacts.phone.href}
               onMouseEnter={() => setMega(null)}
               className={`font-condensed hidden text-[17px] font-bold whitespace-nowrap transition-colors xl:block ${
                 light ? 'text-ink-900 hover:text-brand-500' : 'text-white hover:text-accent-400'
               }`}
             >
-              {contacts.phonePrimary.display}
+              {contacts.phone.display}
             </a>
           </div>
 
@@ -287,11 +287,11 @@ export function Header() {
           </nav>
           <div className="mt-auto px-5 pt-10 pb-10">
             <a
-              href={contacts.phonePrimary.href}
+              href={contacts.phone.href}
               onClick={() => setOpen(false)}
               className="font-condensed text-3xl font-bold text-brand-500"
             >
-              {contacts.phonePrimary.display}
+              {contacts.phone.display}
             </a>
             <p className="mt-3 text-sm text-body-soft">{contacts.hours}</p>
           </div>
