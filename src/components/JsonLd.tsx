@@ -24,7 +24,7 @@ export function OrganizationJsonLd() {
       addressCountry: 'RU',
       addressRegion: 'Новосибирская область',
       addressLocality: 'Новосибирск',
-      streetAddress: 'ул. Б. Хмельницкого, 33/1, офис 6',
+      streetAddress: 'ул. Пролетарская, 54',
     },
     geo: {
       '@type': 'GeoCoordinates',

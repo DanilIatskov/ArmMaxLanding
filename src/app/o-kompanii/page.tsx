@@ -102,10 +102,6 @@ export default function AboutPage() {
 
       <Section>
         <h2 className="rule-accent text-2xl">Допуски и членство в СРО</h2>
-        <p className="mt-8 max-w-2xl text-[15px] leading-relaxed">
-          Членство в саморегулируемой организации проверяют перед тем, как заключить договор
-          генподряда.
-        </p>
         <dl className="mt-10 max-w-2xl space-y-6 border-t border-line pt-8">
           <div className="grid gap-2 sm:grid-cols-2">
             <dt className="text-sm text-body-soft">СРО на строительство</dt>

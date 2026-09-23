@@ -68,7 +68,7 @@ export async function POST(request: Request) {
   */
   if (telegram.total > 0 && telegram.sent === 0) {
     return NextResponse.json(
-      { error: 'Не получилось отправить заявку. Позвоните нам, пожалуйста: +7 (983) 300-70-07' },
+      { error: 'Не получилось отправить заявку. Позвоните нам, пожалуйста: +7 (383) 205-25-54' },
       { status: 502 },
     )
   }
