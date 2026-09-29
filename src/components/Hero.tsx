@@ -51,7 +51,7 @@ export function Hero() {
 
   return (
     <section
-      className="relative flex min-h-[92svh] flex-col overflow-hidden bg-ink-950"
+      className="relative flex min-h-[92svh] flex-col overflow-hidden bg-brand-900"
       onFocusCapture={() => setFocused(true)}
       onBlurCapture={() => setFocused(false)}
     >
@@ -169,7 +169,7 @@ function SlideNav({
  */
 function HeroBackdrop() {
   return (
-    <div aria-hidden className="pointer-events-none absolute inset-0 bg-ink-950">
+    <div aria-hidden className="pointer-events-none absolute inset-0 bg-brand-900">
       <Image
         src={heroStroyka}
         alt=""
@@ -183,9 +183,9 @@ function HeroBackdrop() {
       {/* На широком экране текст занимает левую треть — там и затемняем.
           На узком он идёт во всю ширину, и градиент слева направо просто
           закрыл бы снимок целиком, поэтому там ровная вуаль. */}
-      <div className="absolute inset-0 bg-ink-950/65 md:hidden" />
-      <div className="absolute inset-0 hidden bg-gradient-to-r from-ink-950/85 via-ink-950/45 to-ink-950/10 md:block" />
-      <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-ink-950 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-b from-brand-900/80 via-brand-700/60 to-brand-900/75 md:hidden" />
+      <div className="absolute inset-0 hidden bg-gradient-to-r from-brand-900/90 via-brand-700/50 to-brand-500/10 md:block" />
+      <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-brand-900/90 to-transparent" />
     </div>
   )
 }
